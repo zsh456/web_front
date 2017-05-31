@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>智慧社区模块样式</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区模块样式">
+    <meta name="keyword" content="智慧社区模块样式">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <link href="css/total_ymm.css" rel="stylesheet">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script src="js/views/total_ymm.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="./js/views/totalAngular.js"></script>
+    <script src="js/views/jquery.uploadView.js"></script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" ng-app="project_app" ng-controller="modules" ng-cloak>
+    <!-- 引入公共header部分 -->
+    <div ng-include="'header.html'"></div>
+    <div class="app-body">
+        <!-- 引入公共sideBar区域开始 -->
+        <div ng-include="'sideBar.html'"></div>
+        <!-- 内容区开始 -->
+        <main class="main">
+            <div class="container-fluid self_container_padding">
+                <div class="animated">
+                    <!-- 新增bar -->
+                    <button type="button" class="btn btn-primary btn-lg hidden-md-down" data-toggle="modal" data-target="#module_add">新增</button>
+<div class="modal fade" id="module_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">新增</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-block">
+                    <form action="" enctype="multipart/form-data" class="form-horizontal" novalidate name="moduleAdd">
+                        <div class="form-group row">
+                            <label class="col-md-3">级别</label>
+                            <div class="col-md-5">
+                                <select name="" style="width:100%;" ng-model="typeMoule" ng-options="x.id as x.name for x in types">
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" ng-model="add_id">
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">图标</label>
+                            <div class="js_uploadBox col-md-5">
+                                <div class="js_showBox">
+                                    <img class="js_logoBox file_img " src="" style="width:60px;height:60px;" ng-model="add_icon">
+                                </div>
+                                <div class="btn-upload" style="margin-top:5px;">
+                                    <input class="js_upFile" type="file" name="cover" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">版块名</label>
+                            <div class="col-md-5">
+                                <input type="text" style="width:100%;" ng-model="add_name" required minlength="2" maxlength="10" ng-pattern="/[\u4e00-\u9fa5\w]{2,10}/" name="modName" placeholder="2~10位字符" />
+                            </div> 
+                        </div>
+                        <span style="color:red;" ng-show="moduleAdd.modName.$dirty && moduleAdd.modName.$invalid">
+                            <span ng-show="moduleAdd.modName.$error.required">版块名是必须的</span>
+                            <span ng-show="moduleAdd.modName.$error.pattern">请输入正确
+                            格式的版块名</span>
+                        </span>
+                        <div class="form-group row" ng-hide="typeMoule=='0'">
+                            <label class="col-md-3">简介</label>
+                            <div class="col-md-8">
+                                <input type="text" placeholder="请输入模块简介" ng-model="add_content" style="width:100%;" required />
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-hide="typeMoule=='0'">
+                            <label class="col-md-3">父级</label>
+                            <div class="col-md-5">
+                                <select name="" style="width:100%;" ng-options="parentId.id as parentId.name for parentId in module_list" ng-model="parentId">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">同级内排序</label>
+                            <div class="col-md-5">
+                                <input type="number" min="1" max="99" style="width:100%;" ng-model="add_sort"  ng-pattern="/^[1-9]\d?$/" required name="modSort" placeholder="1~99" />
+                            </div>
+                        </div>
+                        <span style="color:red;" ng-show="moduleAdd.modSort.$dirty && moduleAdd.modSort.$invalid">
+                            <span ng-show="moduleAdd.modSort.$error.required">排序是必须的</span>
+                            <span ng-show="moduleAdd.modSort.$error.pattern">请输入1-99之间的数字</span>
+                        </span>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label">是否启用</label>
+                            <div class="col-md-5">
+                                <label class="switch switch-3d switch-primary">
+                                    <input type="checkbox" class="switch-input" checked ng-model="add_isEnable" ng-false-value="0" ng-true-value="1" ng-init="add_isEnable='0'" />
+                                    <span class="switch-label"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-success" ng-click="add()">
+                    保存
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+                    <div class="card hidden-md-down" style="border:none;"></div>
+                    <!-- 八大板块的样式 -->
+                    <div ng-repeat="x in module_list">
+                        <!-- 单个模块开始 -->
+                        <!-- 页面主标题 -->
+                        <div class="page-header module_page_top module_header_top" id="delPar{{x.id}}">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <img src="{{x.icon}}" alt="一级模块样式图标" style="width:30px;height:30px;margin-left:15px;display:none;">
+                                        <h5 class="page-title">{{x.name}}</h5>
+                                    </div>
+                                    <div class="col-md-5 text-right module_top_edit hidden-md-down">
+                                        <a href="#module_Modal" data-toggle="modal" ng-click="editParID(x.id)">
+                                            <i class="glyphicons glyphicons-edit"></i>
+                                            <span>编辑</span>
+                                        </a>
+                                        <a href="#deleteModalPar_ym" data-toggle="modal" class="mydele" ng-click="deleParID(x.id)">
+                                            <i class="glyphicons glyphicons-bin"></i>
+                                            <span>删除</span>
+                                        </a>
+                                    </div>
+                                    <!-- 编辑父元素开始 -->
+<div class="modal fade" id="module_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">编辑</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" name="modPar">
+                    <div class="form-group row">
+                        <label class="col-md-3 form-control-label">图标</label>
+                        <div class="col-md-7 ">
+                            <div class="js_uploadBox {{partentModule.id}}">
+                                <div class="js_showBox {{partentModule.id}}">
+                                    <img class="js_logoBox file_img" src="{{partentModule.icon}}" style="width:60px;height:60px;">
+                                </div>
+                                <div class="btn-upload" style="margin-top:5px;">
+                                    <input class="js_upFile {{partentModule.id}}" type="file" name="cover" ng-click="fileIMG($event)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3">板块名</label>
+                        <div class="col-md-5">
+                            <input type="text" value="{{partentModule.name}}" style="width:100%;" ng-model="partentModule.name"  required minlength="2" maxlength="10" ng-pattern="/[\u4e00-\u9fa5\w]{2,10}/" name="modName" placeholder="2~10位字符" />
+                        </div>
+                    </div>
+                    <span style="color:red;" ng-show="modPar.modName.$dirty && modPar.modName.$invalid">
+                            <span ng-show="modPar.modName.$error.required">版块名是必须的</span>
+                            <span ng-show="modPar.modName.$error.pattern">请输入正确
+                            格式的版块名</span>
+                        </span>
+                    <div class="form-group row">
+                        <label class="col-md-3">同级内排序</label>
+                        <div class="col-md-5">
+                            <input type="number" min="1" max="99" value="{{partentModule.sort}}" style="width:100%;" ng-model="partentModule.sort" ng-pattern="/^[1-9]\d?$/" required name="modSort" placeholder="1~99"/>
+                        </div>
+                    </div>
+                    <span style="color:red;" ng-show="modPar.modSort.$dirty && modPar.modSort.$invalid">
+                            <span ng-show="modPar.modSort.$error.required">排序是必须的</span>
+                            <span ng-show="modPar.modSort.$error.pattern">请输入1-99之间的数字</span>
+                        </span>
+                    <div class="form-group row ">
+                        <label class="col-md-3">是否启用</label>
+                        <div class="col-md-7">
+                            <label class="switch switch-3d switch-primary">
+                                <input type="checkbox" class="switch-input" checked ng-false-value="0" ng-true-value="1" ng-model="partentModule.isEnable" ng-change="changeParSwitch()" />
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-success" ng-click="add_parent()">
+                    保存
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+                                    <!-- 编辑父元素结束 -->
+                                    <!-- 删除父元素开始 -->
+                                    <div class="modal fade show" id="deleteModalPar_ym" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-xs">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">提示</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>您确定要删除吗?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-success btn-ladda btn-deleteok" ng-click="deleteParOk()">
+                                                        确定
+                                                    </button>
+                                                    <button type="button" class="btn btn-secondary " data-dismiss="modal">取消</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 删除父元素结束 -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="border:none;"></div>
+                        <!-- 子模块 -->
+                        <div class="row">
+                            <div class="col-sm-6 col-lg-3" ng-repeat="y in x.child" id="delson{{y.id}}">
+                                <div class="card">
+                                    <div class="card-block p-1 clearfix" ng-class="{0:'ableColor',1:'enableColor'}[{{y.isEnable}}]">
+                                        <h4 class="mb-0 module_style_big_tit">{{y.name}}</h4>
+                                        <p class="modules_small_tit">
+                                            {{y.content}}
+                                        </p>
+                                        <div class="module_bar_bottom clearfix">
+                                            <img src="{{y.icon}}" class="pull-left img-responsive">
+                                            <div class="pull-right hidden-md-down">
+                                                <a href="#cardStyleContentModal" data-toggle="modal" ng-click="editID(y.id)">
+                                                    <i class="glyphicons glyphicons-edit"></i>
+                                                    <span>编辑</span>
+                                                </a>
+                                                <a href="#deleteModal_ym" data-toggle="modal" class="mydele" ng-click="deleID(y.id)">
+                                                    <i class="glyphicons glyphicons-bin"></i>
+                                                    <span>删除</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 编辑 -->
+<div class="modal fade" id="cardStyleContentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">编辑</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" name="modSon">
+                    <div class="form-group row">
+                        <label class="col-md-3 form-control-label">图标</label>
+                        <div class="col-md-7 ">
+                            <div class="js_uploadBox {{sing_Module.id}}">
+                                <div class="js_showBox {{sing_Module.id}}">
+                                    <img class="js_logoBox file_img" src="{{sing_Module.icon}}" style="width:60px;height:60px;">
+                                </div>
+                                <div class="btn-upload" style="margin-top:5px;">
+                                    <input class="js_upFile {{sing_Module.id}} upfile_height" type="file" name="cover" ng-click="fileSonsIMG($event)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3">板块名</label>
+                        <div class="col-md-5">
+                            <input type="text" value="{{sing_Module.name}}" placeholder="" style="width:100%;" ng-model="sing_Module.name" minlength="2" maxlength="10" ng-pattern="/[\u4e00-\u9fa5\w]{2,10}/" name="modName" placeholder="2~10位字符" required />
+                        </div>
+                    </div>
+                    <span style="color:red;" ng-show="modSon.modName.$dirty && modSon.modName.$invalid">
+                            <span ng-show="modSon.modName.$error.required">版块名是必须的</span>
+                            <span ng-show="modSon.modName.$error.pattern">请输入正确格式的版块名</span>
+                        </span>
+                    <div class="form-group row">
+                        <label class="col-md-3">简介</label>
+                        <div class="col-md-8">
+                            <input type="text" placeholder="" value="{{sing_Module.content}}" style="width:100%;" ng-model="sing_Module.content" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3">父级</label>
+                        <div class="col-md-5">
+                            <select name="" style="width:100%;" ng-model="editParentId" ng-options="parentId.id as parentId.name for parentId in module_list" ng-change="wathParId(editParentId)">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3">同级内排序</label>
+                        <div class="col-md-5">
+                            <input type="number" placeholder="{{sing_Module.sort}}" min="1" max="99" style="width:100%;" ng-model="sing_Module.sort" ng-pattern="/^[1-9]\d?$/" required name="modSort" placeholder="1~99"/>
+                        </div>
+                    </div>
+                    <span style="color:red;" ng-show="modSon.modSort.$dirty && modSon.modSort.$invalid">
+                            <span ng-show="modSon.modSort.$error.required">排序是必须的</span>
+                            <span ng-show="modSon.modSort.$error.pattern">请输入1-99之间的数字</span>
+                        </span>
+                    <div class="form-group row ">
+                        <label class="col-md-3">是否启用</label>
+                        <div class="col-md-7">
+                            <label class="switch switch-3d switch-primary">
+                                <input type="checkbox" class="switch-input" checked ng-model="sing_Module.isEnable" ng-false-value="0" ng-true-value="1" ng-change="changeSwitch()" />
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-success" ng-click="add_sons()">
+                    保存
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+                                <!-- 删除子元素 -->
+                                <div class="modal fade show" id="deleteModal_ym" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xs">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">提示</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>您确定要删除吗?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-success btn-ladda btn-deleteok" ng-click="deleteOk()">
+                                                    确定
+                                                </button>
+                                                <button type="button" class="btn btn-secondary " data-dismiss="modal">取消</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 单个模块结束 -->
+                    </div>
+                    <section class="row pull-right">
+                        <pagination items-per-page="items_per_page" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged(currentPage)" previous-text="上一页" next-text="下一页"></pagination>
+                    </section>
+                </div>
+            </div>
+        </main>
+        <!-- 内容区结束 -->
+    </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+httpBaseUrl = "http://Dev.jgsoft.org";
+var app = angular.module("project_app", ['ui.bootstrap']);
+var loginKey = JSON.parse(window.sessionStorage.getItem("userData"));
+if (loginKey == null) {
+    alert("请先登录！");
+    window.location.href = "./index.html";
+} else {
+    app.controller("modules", function($scope, $rootScope, $http, $location) {
+        // 取得用户登录的帐号相关信息
+        $scope.userLoginUserData = JSON.parse(window.sessionStorage.getItem("userData"));
+        /*获取模块样式列表*/
+        $http.get(httpBaseUrl + "/api/menuapp/getpagelist?pos=1&pagesize=10").then(function(response) {
+            if (response.data.code !== 200) {
+                alert(response.data.msg);
+            } else if (response.data.code == 200) {
+                $scope.module_list = response.data.obj;
+                // 给父级赋予初始值
+                $scope.parentId = response.data.obj['0']['id'];
+                $scope.items_per_page = 10; // 每页显示的条数
+                $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                $scope.totalItems = response.data.sumcount; // 总条数
+                $scope.currentPage = 1; // 指定当前页码为第一页
+                $scope.pageChanged = function(activePage) {
+                    $http.get(httpBaseUrl + "/api/menuapp/getpagelist?pos=" + activePage + "&pagesize=10").then(function(response) {
+                        if (response.data.code !== 200) {
+                            alert(response.data.msg);
+                        } else if (response.data.code == 200) {
+                            $scope.module_list = response.data.obj;
+                        }
+                    }, function() {
+                        alert("对不起、当前网速较慢、请重新获取模块样式列表！");
+                    })
+                }
+
+            }
+        }, function() {
+            alert("对不起，请重新获取列表信息！");
+        });
+        /*增加模块*/
+        $scope.types = [{
+            "id": "0",
+            "name": "一级"
+        }, {
+            "id": "1",
+            "name": "二级"
+        }];
+        $scope.typeMoule = $scope.types['0']['id'];
+        // 新增头像
+        $(".js_upFile").uploadView({
+            uploadBox: '.js_uploadBox', //设置上传框容器
+            showBox: '.js_showBox', //设置显示预览图片的容器
+            width: 60, //预览图片的宽度，单位px
+            height: 60, //预览图片的高度，单位px
+            allowType: ["gif", "jpeg", "jpg", "bmp", "png"], //允许上传图片的类型
+            maxSize: 2, //允许上传图片的最大尺寸，单位M
+            success: function(e) {
+                // $(".js_uploadText").text('更改');
+                alert('图片上传成功');
+            }
+        });
+        // console.log($(".js_upFile"));
+        $scope.add = function() {
+            $scope.add_icon = $("div.js_showBox img").attr("src");
+            var add_data = {
+                "id": "0",
+                "name": $scope.add_name,
+                "icon": $scope.add_icon,
+                "parentId": $scope.typeMoule == "0" ? $scope.parentId = "0" : $scope.parentId,
+                "sort": $scope.add_sort,
+                "isEnable": $scope.add_isEnable,
+                "type": "1",
+                "content": $scope.typeMoule == "0" ? $scope.add_content = "" : $scope.add_content
+            };
+            if ($scope.typeMoule == "0") {
+                if ($scope.add_icon == "") {
+                    alert("请上传一级模块头像！");
+                } else if ($scope.add_name == undefined) {
+                    alert("请输入模块名称！");
+                } else if ($scope.add_sort == undefined) {
+                    alert("请手动排序！");
+                } else {
+                    $http.post(httpBaseUrl + "/api/menuapp/SubmitMenuInfo", add_data).then(function(response) {
+                        if (response.data.code !== 200) {
+                            alert(response.data.msg);
+                        } else if (response.data.code == 200) {
+                            alert("恭喜你，新增成功！");
+                            window.location.reload();
+                        }
+                    }, function() {
+                        alert("对不起，当前网络较慢、请重新新增！");
+                    });
+                }
+            } else if ($scope.typeMoule == "1") {
+                if ($scope.add_icon == "") {
+                    alert("请上传二级模块头像！");
+                } else if ($scope.add_name == undefined) {
+                    alert("请输入模块名称！");
+                }
+                /*else if ($scope.add_content == undefined) {
+                               alert("请输入模块简介！");
+                           }*/
+                else if ($scope.add_sort == undefined) {
+                    alert("请手动排序！");
+                } else {
+                    $http.post(httpBaseUrl + "/api/menuapp/SubmitMenuInfo", add_data).then(function(response) {
+                        if (response.data.code !== 200) {
+                            alert(response.data.msg);
+                        } else if (response.data.code == 200) {
+                            alert("恭喜你，新增成功！");
+                            window.location.reload();
+                        }
+                    }, function() {
+                        alert("对不起，当前网络较慢、请重新新增！");
+                    });
+                }
+            };
+        };
+        /*编辑时获得父模块的详细信息*/
+        $scope.editParID = function(edprid) {
+            $scope.edParId = edprid;
+            $http.get(httpBaseUrl + "/api/menuapp/GetSingle?id=" + edprid).then(function(response) {
+                if (response.data.code !== 200) {
+                    alert(response.data.msg);
+                } else if (response.data.code == 200) {
+                    $scope.partentModule = response.data.obj;
+                    $scope.partentid = response.data.obj.parentId;
+                    /*取到的isEnable的值、并进行按钮样式的转换*/
+                    $scope.changeParSwitch = function() {
+                        var _this = $(".js_upFile" + edprid);
+                        if ($scope.partentModule.isEnable == 1) {
+                            _this.prop('checked', true);
+                        } else if ($scope.partentModule.isEnable == 0) {
+                            _this.prop('checked', false);
+                        };
+                    };
+                    $scope.fileIMG = function($event) {
+                        var activeIMG = angular.element($event.target);
+                        activeIMG.uploadView({
+                            uploadBox: '.js_uploadBox.' + edprid, //设置上传框容器
+                            showBox: '.js_showBox.' + edprid, //设置显示预览图片的容器
+                            width: 60, //预览图片的宽度，单位px
+                            height: 60, //预览图片的高度，单位px
+                            allowType: ["gif", "jpeg", "jpg", "bmp", "png"], //允许上传图片的类型
+                            maxSize: 2, //允许上传图片的最大尺寸，单位M
+                            success: function(e) {
+                                // $(".js_uploadText").text('更改');
+                                alert('图片上传成功');
+                            }
+                        });
+                    };
+                    /*编辑提交父模块信息*/
+                    $scope.add_parent = function() {
+                        $scope.add_parent_icon = $('.js_showBox.' + edprid).children("img").attr("src");
+                        var partent_data = {
+                            "id": edprid,
+                            "name": $scope.partentModule.name,
+                            "icon": $scope.add_parent_icon,
+                            "parentId": $scope.partentid,
+                            "sort": $scope.partentModule.sort,
+                            "isEnable": $scope.partentModule.isEnable,
+                            "type": "1"
+                        };
+                        console.log(partent_data);
+                        if ($scope.add_parent_icon == "") {
+                            alert("请上传一级模块头像！");
+                        } else if ($scope.partentModule.name == "") {
+                            alert("请输入模块名称！");
+                        } else {
+                            $http.post(httpBaseUrl + "/api/menuapp/SubmitMenuInfo", partent_data).then(function(response) {
+                                if (response.data.code !== 200) {
+                                    alert(response.data.msg);
+                                } else if (response.data.code == 200) {
+                                    alert("恭喜你，编辑成功！");
+                                    window.location.reload();
+                                }
+                            }, function() {
+                                alert("对不起，请重新编辑！");
+                            });
+                        };
+                    };
+                }
+            }, function() {
+                alert("对不起、当前网速较慢、请重新获取一级模块信息！");
+            });
+        };
+        /*编辑时获得子模块的详细信息*/
+        $scope.editID = function(edid) {
+            $http.get(httpBaseUrl + "/api/menuapp/GetSingle?id=" + edid).then(function(response) {
+                if (response.data.code !== 200) {
+                    alert(response.data.msg);
+                } else if (response.data.code == 200) {
+                    $scope.sing_Module = response.data.obj;
+                    $scope.editParentId = response.data.obj.parentId;
+                    $scope.fileSonsIMG = function($event) {
+                        var activeIMG = angular.element($event.target);
+                        activeIMG.uploadView({
+                            uploadBox: '.js_uploadBox.' + edid, //设置上传框容器
+                            showBox: '.js_showBox.' + edid, //设置显示预览图片的容器
+                            width: 60, //预览图片的宽度，单位px
+                            height: 60, //预览图片的高度，单位px
+                            allowType: ["gif", "jpeg", "jpg", "bmp", "png"], //允许上传图片的类型
+                            maxSize: 2, //允许上传图片的最大尺寸，单位M
+                            success: function(e) {
+                                // $(".js_uploadText").text('更改');
+                                alert('图片上传成功');
+                            }
+                        });
+                    };
+                    /*取到的isEnable的值、并进行按钮样式的转换*/
+                    $scope.changeSwitch = function() {
+                        var _this = $("input.switch-input.active");
+                        if ($scope.sing_Module.isEnable == 1) {
+                            _this.prop('checked', true);
+                        } else if ($scope.sing_Module.isEnable == 0) {
+                            _this.prop('checked', false);
+                        };
+                    };
+                    // 动态获取编辑是的父级id值
+                    $scope.wathParId = function(editModuleParId) {
+                        $scope.editModuleParid = editModuleParId;
+                    };
+                    /*编辑提交子模块信息*/
+                    $scope.add_sons = function() {
+                        $scope.add_sons_icon = $('.js_showBox.' + edid).children("img").attr("src");
+                        var sons_data = {
+                            "id": edid,
+                            "name": $scope.sing_Module.name,
+                            "icon": $scope.add_sons_icon,
+                            "parentId": $scope.editModuleParid == undefined ? $scope.editParentId : $scope.editModuleParid,
+                            "sort": $scope.sing_Module.sort,
+                            "isEnable": $scope.sing_Module.isEnable,
+                            "type": "1",
+                            "content": $scope.sing_Module.content
+                        };
+                        if ($scope.add_sons_icon == "") {
+                            alert("请上传二级模块头像！");
+                        } else if ($scope.sing_Module.name == "") {
+                            alert("请输入模块名称！");
+                        }
+                        /*else if ($scope.sing_Module.content == "") {
+                                           alert("请输入模块简介！");
+                                       }*/
+                        else {
+                            $http.post(httpBaseUrl + "/api/menuapp/SubmitMenuInfo", sons_data).then(function(response) {
+                                if (response.data.code !== 200) {
+                                    alert(response.data.msg);
+                                } else if (response.data.code == 200) {
+                                    alert("恭喜你，编辑成功！");
+                                    window.location.reload();
+                                }
+                            }, function() {
+                                alert("对不起，请重新编辑！");
+                            });
+                        };
+                    };
+                }
+            }, function() {
+                alert("当前网速较慢、请重新获取二级模块信息！");
+            });
+        };
+        /*动态删除子模块*/
+        $scope.deleID = function(delid) {
+            /*删除子模块*/
+            $scope.deleteOk = function() {
+                $http.get(httpBaseUrl + "/api/menuapp/RemoverMenuApp?id=" + delid).then(function(response) {
+                    if (response.data.code !== 200) {
+                        alert(response.data.msg);
+                    } else if (response.data.code == 200) {
+                        alert("恭喜你，成功删除该条数据！");
+                        $("div#delson" + delid).remove();
+                        window.location.reload();
+                    }
+                }, function() {
+                    alert("对不起，请重新删除！");
+                });
+            };
+        };
+        /*动态删除获取的父元素的id值*/
+        $scope.deleParID = function(delparId) {
+            /*删除父模块*/
+            $scope.deleteParOk = function() {
+                $http.get(httpBaseUrl + "/api/menuapp/RemoverMenuApp?id=" + delparId).then(function(response) {
+                    if (response.data.code !== 200) {
+                        alert(response.data.msg);
+                    } else if (response.data.code == 200) {
+                        alert("恭喜你，删除成功！");
+                        $("div#delPar" + delparId).remove();
+                        window.location.reload();
+                    }
+                }, function() {
+                    alert("对不起，请重新删除！");
+                    window.location.reload();
+                });
+            };
+        };
+
+    });
+};
+</script>

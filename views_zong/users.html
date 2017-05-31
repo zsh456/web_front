@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>智慧社区用户信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区用户信息">
+    <meta name="keyword" content="智慧社区用户信息">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <link href="css/total_ymm.css" rel="stylesheet">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script src="js/views/total_ymm.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="./js/views/totalAngular.js"></script>
+    <script src="js/views/jquery.uploadView.js"></script>
+    <!-- 行政区三级联动 -->
+    <script language="JavaScript" src="http://passport.baidu.com/js/sitedata_bas.js" charset="GBK"></script>
+    <script src="js/views/area.js"></script>
+</head>
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" ng-app="project_app" ng-controller="users" ng-cloak>
+    <!-- 引入公共header部分 -->
+    <div ng-include="'header.html'"></div>
+    <div class="app-body">
+        <!-- 引入公共sideBar区域开始 -->
+        <div ng-include="'sideBar.html'"></div>
+        <!-- 主要内容区 -->
+        <main class="main">
+            <div class="container-fluid">
+                <div class="animated">
+                    <div class="card users_card">
+                        <div class="card-header user_add_top hidden-md-down">
+                            <div class="input-group col-md-4" style="padding-left:0;">
+                                <input type="text" class="form-control" placeholder="关键词搜索" ng-keypress="searchUser($event)">
+                            </div>
+                        </div>
+                        <div class="card-block users_list">
+                            <table class="table table-striped table-bordered datatable user_table_zsh">
+                                <thead>
+                                    <tr>
+                                        <th>头像</th>
+                                        <th>昵称</th>
+                                        <th class="hidden-md-down">手机号码</th>
+                                        <th class="hidden-md-down">所在地区</th>
+                                        <th class="hidden-md-down">注册时间</th>
+                                        <th>状态</th>
+                                        <th class="hidden-md-down">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in userData">
+                                        <td>
+                                            <img src="{{x.purl}}" alt="用户头像" style="width:54px;height:50px;">
+                                        </td>
+                                        <td>{{x.nickName}}</td>
+                                        <td class="hidden-md-down">{{x.phone}}</td>
+                                        <td class="hidden-md-down">{{x.address}}</td>
+                                        <td class="hidden-md-down">{{x.registDt}}</td>
+                                        <td>
+                                            {{x.isEnable=='0' ? '禁用' : '启用'}}
+                                        </td>
+                                        <td class="hidden-md-down">
+                                            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#user_edit" ng-click="editUserId(x.id)" ng-disabled="{{x.streetId}}!=={{streetid}}">
+                                                <i class="fa fa-edit "></i>
+                                            </button>
+                                            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#user_del" ng-click="delUserid(x.id)" ng-disabled="{{x.streetId}}!=={{streetid}}">
+                                                <i class="fa fa-trash-o "></i>
+                                            </button>
+                                        </td>
+                                        <!-- 编辑用户 -->
+                                        <div class="modal fade" id="user_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" style="max-width:800px;">
+                                                <div class="modal-content" style="border:none;">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title pull-left" id="myModalLabel">编辑</h4>
+                                                        <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true">
+                                                            &times;
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body" style="border:none;">
+                                                        <div class="container-fluid">
+                                                            <div class="animated fadeIn">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <ul class="nav nav-tabs" role="tablist" style="background: #DAE1E8;">
+                                                                            <li class="nav-item">
+                                                                                <a class="nav-link active" data-toggle="tab" href="#home" role="tab" aria-controls="home">基础信息</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                        <div class="tab-content">
+                                                                            <div class="tab-pane active" id="home" role="tabpanel">
+                                                                                <form class="bs-example bs-example-form" role="form">
+                                                                                    <div class="input-group">
+                                                                                        <label for="" class="col-md-2 pull-left">
+                                                                                            头像
+                                                                                        </label>
+                                                                                        <div class="js_uploadBox">
+                                                                                            <div class="js_showBox">
+                                                                                                <img class="js_logoBox file_img" src="{{singleUser.purl}}" style="width:60px;height:60px;">
+                                                                                            </div>
+                                                                                            <div class="btn-upload" style="margin-top:5px;">
+                                                                                                <input class="js_upFile" type="file" name="cover">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <br/>
+                                                                                    <div class="input-group">
+                                                                                        <label for="" class="col-md-2 pull-left">昵称
+                                                                                        </label>
+                                                                                        <input type="text" class="form-control col-md-4" value="{{singleUser.nickName}}" ng-model="singleUser.nickName">
+                                                                                    </div>
+                                                                                    <br/>
+<div class="input-group  areas_liandong edit_street">
+    <label for="" class="col-md-2 pull-left"> 所在地区
+    </label>
+    <div class="selBoxList">
+        <span class="selSt selProvince editUserPro{{singleUser.id}}">
+<span class="current defSel">{{singleUser.province}}</span>
+        <span class="box"></span>
+        </span>
+        <span class="selSt selCity editUserCit{{singleUser.id}}">
+<span class="current defSel">{{singleUser.city}}</span>
+        <span class="box"></span>
+        </span>
+        <span class="selSt selArea editUserArea{{singleUser.id}}">
+<span class="current defSel">{{singleUser.county}}</span>
+        <span class="box"></span>
+        </span>
+    </div>
+</div>
+                                                                                    <br/>
+                                                                                    <div class="input-group" style="z-index:0;">
+                                                                                        <label class="col-md-2 pull-left">街道名</label>
+                                                                                        <input type="text" class="form-control col-md-4" value="{{singleUser.streetName}}" ng-model="singleUser.streetName">
+                                                                                    </div>
+                                                                                    <br/>
+                                                                                    <div class="input-group" style="z-index:0;">
+                                                                                        <label for="" class="col-md-2 pull-left"> 是否启用
+                                                                                        </label>
+                                                                                        <label class="switch switch-default switch-pill switch-primary">
+                                                                                            <input type="checkbox" class="switch-input isEnable{{singleUser.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editUser_data_isEnable" ng-change="changeUserIsenableSwitch()">
+                                                                                            <span class="switch-label"></span>
+                                                                                            <span class="switch-handle"></span>
+                                                                                        </label>
+                                                                                        <!-- {{editUser_data_isEnable}} -->
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!--/.row-->
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.conainer-fluid -->
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer" style="background:white;border-bottom:1px solid #d1d4d7;">
+                                                    <button type="button" class="btn btn-primary" ng-click="editUsers()">
+                                                        保存
+                                                    </button>
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        关闭
+                                                    </button>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal -->
+                                        </div>
+                                        <!-- 删除用户 -->
+                                        <div class="modal fade" id="user_del" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header text-right">
+                                                        <h4 class="modal-title pull-left" id="myModalLabel">
+                                            删除
+                                        </h4>
+                                                        <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true">
+                                                            &times;
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        你确定删除该用户个人信息吗？
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" ng-click="delUser()">
+                                                            确定
+                                                        </button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                            取消
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal -->
+                                        </div>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <section class="pull-right">
+                                <pagination items-per-page="items_per_page" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged(currentPage)" previous-text="上一页" next-text="下一页"></pagination>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.conainer-fluid -->
+        </main>
+        </div>
+</body>
+
+</html>
+<script type="text/javascript">
+httpBaseUrl = "http://Dev.jgsoft.org";
+var loginKey = JSON.parse(window.sessionStorage.getItem("userData"));
+var app = angular.module("project_app", ['ui.bootstrap']);
+if (loginKey == null) {
+    alert("请先登录！");
+    window.location.href = "./index.html";
+} else {
+    /*用户信息开始*/
+    app.controller("users", function($scope, $http, $location) {
+        // 取得用户登录的帐号相关信息
+        $scope.userLoginUserData = JSON.parse(window.sessionStorage.getItem("userData"));
+        $scope.streetID = JSON.parse(window.sessionStorage.getItem("userData")).streetId;
+        $scope.streetid =  parseInt($scope.streetID);
+        $scope.baseUrl = $location.absUrl();
+        /*用户列表*/
+        $http.get(httpBaseUrl + "/api/user/getpagelist?pos=1&pagesize=10&keyword=&streetId=" + $scope.streetID).then(function(response) {
+            if (response.data.code !== 200) {
+                alert(response.data.msg);
+            } else if (response.data.code == 200) {
+                if (response.data.obj == "") {
+                    alert("当前街道下面暂无用户哟！");
+                } else {
+                    $scope.userData = response.data.obj;
+                    $scope.items_per_page = 10; // 每页显示的条数
+                    $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                    $scope.totalItems = response.data.sumcount; // 总条数
+                    $scope.currentPage = 1; // 指定当前页码为第一页
+                    $scope.pageChanged = function(activePage) {
+                        $http.get(httpBaseUrl + "/api/user/getpagelist?pos=" + activePage + "&pagesize=10&keyword=&streetId=" + $scope.streetID).then(function(response) {
+                            if (response.data.code !== 200) {
+                                alert(response.data.msg);
+                            } else if (response.data.code == 200) {
+                                $scope.userData = response.data.obj;
+                            }
+                        }, function() {
+                            alert("对不起、列表获取失败、请重新获取！");
+                        });
+                    };
+                }
+            }
+        }, function() {
+            alert("对不起、当前网速减慢、请重新获取街道用户信息！");
+        });
+        /*动态编辑的app用户*/
+        $scope.editUserId = function(userid) {
+            // userID=userid;
+            // 查询用户的详细信息
+            $http.get(httpBaseUrl + "/api/user/GetSingle?id=" + userid).then(function(response) {
+                if (response.data.code !== 200) {
+                    alert(response.data.msg);
+                } else if (response.data.code == 200) {
+                    $scope.singleUser = response.data.obj;
+                    $scope.editUser_data_isEnable = response.data.obj.isEnable;
+                    // console.log($scope.singleUser);
+                }
+            }, function() {
+                alert("对不起、当前网速减慢、请重新获取该用户信息！");
+            });
+            // 用户头像编辑
+            $(".js_upFile").uploadView({
+                uploadBox: '.js_uploadBox', //设置上传框容器
+                showBox: '.js_showBox', //设置显示预览图片的容器
+                width: 60, //预览图片的宽度，单位px
+                height: 60, //预览图片的高度，单位px
+                allowType: ["gif", "jpeg", "jpg", "bmp", "png"], //允许上传图片的类型
+                maxSize: 2, //允许上传图片的最大尺寸，单位M
+                success: function(e) {
+                    // $(".js_uploadText").text('更改');
+                    alert('图片上传成功');
+                }
+            });
+            // 对取得的isEnable的值进行转换
+            $scope.changeUserIsenableSwitch = function() {
+                var _this = $("input.isEnable" + userid);
+                if ($scope.editUser_data_isEnable == '1') {
+                    _this.prop('checked', true);
+                } else if ($scope.editUser_data_isEnable == '0') {
+                    _this.prop('checked', false);
+                };
+            };
+            // 用户编辑提交
+            $scope.editUsers = function() {
+                $scope.urlImgUrl = $(".js_showBox img").attr("src");
+                // $scope.urlImgUrl=$(".js_showBox").children("img").attr("src");
+                $scope.editUserP = $(".editUserPro" + userid).children("span.current").text();
+                $scope.editUserC = $(".editUserCit" + userid).children("span.current").text();
+                $scope.editUserA = $(".editUserArea" + userid).children("span.current").text();
+                var AppUserData = {
+                    "id": userid,
+                    "streetId": $scope.streetID,
+                    "city": $scope.editUserC,
+                    "county": $scope.editUserA == "--请选择--" ? "" : $scope.editUserA,
+                    "isEnable": $scope.editUser_data_isEnable,
+                    "nickName": $scope.singleUser.nickName,
+                    "province": $scope.editUserP,
+                    "purl": $scope.urlImgUrl,
+                    "streetName": $scope.singleUser.streetName
+                };
+                if ($scope.singleUser.nickName == "") {
+                    alert("请输入用户昵称！");
+                } else if ($scope.editUserC == "--请选择--") {
+                    alert("请选择城市！");
+                } else if ($scope.singleUser.streetName == "") {
+                    alert("请输入街道名！");
+                } else {
+                    $http.post(httpBaseUrl + "/api/user/SubmitUserInfo", AppUserData).then(function(response) {
+                        if (response.data.code !== 200) {
+                            alert(response.data.msg);
+                        } else if (response.data.code == 200) {
+                            alert("恭喜你、成功编辑该用户");
+                            window.location.reload();
+                        }
+                    }, function() {
+                        alert("对不起、当前网速较慢、请重新编辑该用户！");
+                    });
+                }
+            };
+
+        };
+        /*点击删除按钮动态取得用户id值*/
+        $scope.delUserid = function(delUserId) {
+            // delUserID=delUserId;
+            /*删除用户*/
+            $scope.delUser = function() {
+                $http.get(httpBaseUrl + "/api/user/RemoverAppUser?id=" + delUserId).then(function(response) {
+                    if (response.data.code !== 200) {
+                        alert(response.data.msg);
+                    } else if (response.data.code == 200) {
+                        alert("恭喜你、成功删除该用户！");
+                        window.location.reload();
+                    }
+                }, function() {
+                    alert("对不起、当前网速较慢、请重新删除该用户！");
+                });
+            };
+        };
+        /*用户搜索*/
+        $scope.searchUser = function($event) {
+            if($event.keyCode==13){
+               $scope.userKey = angular.element($event.target).val();
+                $http.get(httpBaseUrl + "/api/user/getpagelist?pos=1&pagesize=10&keyword=" + $scope.userKey + "&streetId=" + $scope.streetID).then(function(response) {
+                    if (response.data.code !== 200) {
+                        alert(response.data.msg);
+                    } else if (response.data.code == 200) {
+                        if (response.data.obj == "") {
+                            $scope.userData = response.data.obj;
+                            alert("抱歉、未搜索到与之匹配的用户！");
+                        } else if (response.data.obj !== "") {
+                            $scope.userData = response.data.obj;
+                        }
+                    }
+                }, function() {
+                    alert("当前网速较慢、请重新搜索用户");
+                }); 
+            };
+        };
+    });
+    /*用户信息结束*/
+};
+</script>

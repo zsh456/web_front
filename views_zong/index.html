@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>智慧社区后台登录</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区后台登录">
+    <meta name="keyword" content="智慧社区后台登录">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/total_ym.css" />
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <script src="js/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="js/views/jquery.cookie.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="js/views/totalAngular.js"></script>
+</head>
+<body class="app flex-row align-items-center login_back">
+    <img src="./img/logo1.png" class="login_pub_logo" alt="左上角logo图">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card-group mb-0">
+                    <div class="card login_border_none">
+                        <div class="card-header login_header">
+                            <button type="button" class="btn btn-primary btn-lg btn-block login_tit_btn"> 智能社区后台管理系统
+                            </button>
+                        </div>
+                        <form>
+                            <div class="card-block p-2">
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon login_Username_mark">
+                                    </span>
+                                    <input type="text" class="form-control loginUserName" placeholder="用户名" id="username" name="account" autofocus required minlength="2" maxlength="8">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-addon login_Pass_mark">
+                                    </span>
+                                    <input type="password" class="form-control passInput" placeholder="密码" id="password" name="password" required minlength="6" maxlength="18">
+                                </div>
+                                <button type="button" class="btn btn-primary btn-md btn-block login_btn" onClick="saveUserInfo()" onkeypress="login(event)">
+                                    登&nbsp;&nbsp;录
+                                </button>
+                            </div>
+                            <div class="card-block login_footer">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <div class="checkbox login_footer_left">
+                                            <label>
+                                                <input type="checkbox" id="remberMe" name="agree" value="agree"> 记住用户名和密码
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 text-right login_footer_right">
+                                        <a href="./forgPass.html">
+                                            忘记密码?
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+httpBaseUrl = "http://Dev.jgsoft.org";
+$(document).ready(function() {
+    if ($.cookie("rmbUser") == "true") {
+        $("#remberMe").prop("checked", true);
+        $("#username").val($.cookie("userName"));
+        $("#password").val($.cookie("passWord"));
+    }
+});
+
+function saveUserInfo() {
+    var userName = $("#username").val(),
+        passWord = $("#password").val(),
+        userCorrect = /[\u4e00-\u9fa5_a-zA-Z0-9]{2,8}/, //匹配中文大小写字母数字以及下划线
+        passCorrect = /[_a-zA-Z0-9]{6,18}/,
+        loginUserSf = userName.match(userCorrect),
+        loginPasSf = passWord.match(passCorrect);
+    if ($("#remberMe").prop("checked") == true) {
+        $.cookie("rmbUser", "true", {
+            expires: 7
+        }); // 存储一个带7天期限的 cookie
+        $.cookie("userName", userName, {
+            expires: 7
+        }); // 存储一个带7天期限的 cookie
+        $.cookie("passWord", passWord, {
+            expires: 7
+        }); // 存储一个带7天期限的 cookie
+        var cookieUser = $.cookie("userName"),
+            cookiePas = $.cookie("passWord"),
+            cookieUserSf = cookieUser.match(userCorrect),
+            cookiePasSf = cookiePas.match(passCorrect);
+        if (cookieUser == "") {
+            alert("请输入用户名！");
+        } else if (cookieUserSf == null) {
+            alert("请输入正确的用户名！");
+        } else if (cookiePas == "") {
+            alert("请输入密码！");
+        } else if (cookiePasSf == null) {
+            alert("请输入至少6位数的密码！");
+        } else {
+            var loginData = {
+                "loginName": cookieUser,
+                "passWord": cookiePas
+            };
+            $.ajax({
+                type: "POST",
+                url: httpBaseUrl + "/api/streetadmin/UserLogin",
+                data: loginData,
+                success: function(response) {
+                    if (response.code !== 200) {
+                        alert(response.msg);
+                    } else if (response.code == 200) {
+                        // alert("恭喜你、登录成功！");
+                        var adminType = response.obj.adminType;
+                        if (adminType == 0) {
+                            window.sessionStorage.setItem("userData", JSON.stringify(response.obj));
+                            window.location.href = "./dataReports.html";
+                        } else if (adminType == 1) {
+                            window.sessionStorage.setItem("userData", JSON.stringify(response.obj));
+                            window.location.href = "../views_main/index.html";
+                        } else {
+                            window.sessionStorage.setItem("userData", JSON.stringify(response.obj));
+                            window.location.href = "../views_business/dataReports.html";
+                        };
+                    }
+                },
+                error: function() {
+                    alert("对不起、当前网速较慢、请重新登录！");
+                }
+            });
+        };
+    } else {
+        $.cookie("rmbUser", "false", {
+            expires: -1
+        }); // 删除 cookie
+        $.cookie("userName", '', {
+            expires: -1
+        });
+        $.cookie("passWord", '', {
+            expires: -1
+        });
+        if (userName == "") {
+            alert("请输入用户名！");
+        } else if (loginUserSf == null) {
+            alert("请输入正确的用户名！");
+        } else if (passWord == "") {
+            alert("请输入密码！");
+        } else if (loginPasSf == null) {
+            alert("请输入至少6位数的密码！");
+        } else {
+            var loginData = {
+                "loginName": userName,
+                "passWord": passWord
+            };
+            $.ajax({
+                type: "POST",
+                url: httpBaseUrl + "/api/streetadmin/UserLogin",
+                data: loginData,
+                success: function(response) {
+                    // console.log(response.obj.adminType);
+                    if (response.code !== 200) {
+                        alert(response.msg);
+                    } else if (response.code == 200) {
+                        // alert("恭喜你、登录成功！");
+                        var adminType = response.obj.adminType;
+                        if (adminType == 0) {
+                            window.sessionStorage.setItem("userData", JSON.stringify(response.obj));
+                            window.location.href = "./dataReports.html";
+                        } else if (adminType == 1) {
+                            window.sessionStorage.setItem("userData", JSON.stringify(response.obj));
+                            window.location.href = "../views_main/index.html";
+                        } else {
+                            window.sessionStorage.setItem("userData", JSON.stringify(response.obj));
+                            window.location.href = "../views_business/dataReports.html";
+                        };
+                    }
+                },
+                error: function() {
+                    alert("对不起、当前网速较慢、请重新登录！");
+                }
+            });
+        };
+    }
+};
+/*增加按回车键登录事件*/
+$(document).ready(function() {
+    function login(event) {
+        if (event.keyCode == 13) {
+            /*调用登录的方法*/
+            saveUserInfo();
+        }
+    };
+});
+$(".loginUserName").keypress(function(event){
+    if (event.keyCode == 13) {
+            /*调用登录的方法*/
+            saveUserInfo();
+        }
+});
+$(".passInput").keypress(function(event){
+    if (event.keyCode == 13) {
+            /*调用登录的方法*/
+            saveUserInfo();
+        }
+});
+</script>

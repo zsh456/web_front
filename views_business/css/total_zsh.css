@@ -1,0 +1,158 @@
+@charset"utf-8";
+	.parents_checkbox{padding:0;}
+	.sons_checkbox{padding-left:17px;}
+	ul li,ol li{list-style:none;}
+	main{background-color:#f8f9fa;}
+	.btn-upload {position: absolute;top:0px;opacity:0;margin-top:0 !important;}
+	input.upfile_height,input.js_upFile{height:60px;width:60px;}
+	.enableColor{background-color:#fff;}
+	.ableColor{background-color:#f5f7fa;}
+	.padding-top-none{padding-top:0 !important;}
+	.padding-right-none{padding-right:0 !important;}
+/*树形菜单样式开始*/
+	ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #fff;width:220px;height:360px;overflow-y:scroll;overflow-x:auto;}
+/*树形菜单样式结束*/
+/* 行政区域三级联动 */
+	.selBoxList{/*width:100%;margin-top:50px;*/text-align:center;}
+	.selBoxList .selSt{min-width:100px;display:inline-block;position:relative;}
+	.selBoxList .selSt .current{width:100%;padding:0 10px;font-size:16px;line-height:30px;cursor:pointer;float:left;border:1px solid #ccc;background:#fff;box-sizing: border-box;position:relative;z-index: 2;}
+	.selBoxList .selSt .box{z-index:2;width:100%;position:absolute;left:0;top:30px;border:1px solid #ccc;max-height:300px;overflow:auto;box-sizing: border-box;display:none;}
+	.selBoxList .selSt .box span{width:100%;font-size:16px;line-height:30px;cursor:pointer;border-top:1px solid #ccc;float:left;}
+	.selBoxList .selSt .box span:hover{background:#f1f1f1;}
+/*公共内容区padding值*/
+	.container-fluid.self_container_padding{padding:24px 24px 0 24px;}
+	.col_padding_left{padding-left:12px;padding-right:12px;}
+/*数据统计页面开始*/
+	/*header部分*/
+		.header_top button{line-height:38px;border-top:none;border-bottom:none;padding:8px 60px;}
+	/*侧边栏开始*/
+		.left_top_log_bar{background-size:auto auto !important;background-color:#fff !important;}
+		/*.self_sidebar ul li{text-indent:1em;}*/
+		.self_sidebar ul li.nav-title{text-align:center;/*text-indent:2em;*/}
+		/*.self_sidebar ul li.nav-title:before{content:"——";}
+		.self_sidebar ul li.nav-title:after{content:"——";}*/
+		/*.self_sidebar ul.nav li.nav-item a.nav-link{text-indent:3em;}*/
+		.self_sidebar ul.nav li.nav-item a.nav-link span{text-indent:0;}
+		.app-header.navbar-toggler{color:black;}
+		a.nav-link.dropdown-toggle.nav-link.user_img:after {border-left:none;border-right:none;}
+		button.navbar-toggler.mobile-sidebar-toggler.hidden-lg-up.nav_zhedie {color: black;}
+		li.nav-title.sideFirstLi{padding-left:0;padding-right:0;}
+		a.nav-link.secondTitle{text-align:left;text-indent: 1.5em;}
+		ul.nav.secondUl {margin-top: 12px;}
+		.dropdown-menu.dropdown-menu-right.layoutA{background-color:#d1d4d7;border:none;margin-top: 0.525rem;min-width: 0;width: 112px;margin-right: 20px;}
+		.dropdown-menu.dropdown-menu-right.layoutA a{min-width:0;padding:3px 20px;}
+		text.highcharts-credits>tspan:nth-child(2){font-size:18px;color:#374767;}
+	/*地图与用户数量统计*/
+		.user_col_zsh .card-block{height:504.5px;}
+		.table_user{padding-top:0;}
+		table.table.table-hover.table-outline.mb-2.hidden-sm-down.table_tj{border:none;border-bottom:1px solid #d1d4d7;}
+		table.table.table-hover.table-outline.mb-2.hidden-sm-down.table_tj>tbody>tr:first-child td{border-top:none;}
+		.topBar span{display:inline-block;}
+		.topBar span:not(:last-child){color:#20A8D8;}
+		.topBar span:not(:last-child):after{content:" >";}
+	/*社区模块点击量与街道特色统计表*/
+		.col_hits_zsh,.col_street_zsh{min-height:466px;}
+		img.img-responsive.pull-left.module_hits_img{width:90px;height:86px;}
+		.module_hits_text{padding-left:5px;margin-top:20px;}
+		.module_hits_text h5{font-weight:bold;}
+		.addNum{font-size:18px;color:#3F5072;}
+		.addNum span{font-size:36px;}
+/*数据统计页面结束*/
+/*用户统计表页面开始*/
+	.users_card{border:none;}
+	.user_add_top{padding-left:0;}
+	.users_list{padding:0;}
+	.user_table_zsh{border-top:none;border-bottom:none;}
+	.user_table_zsh tbody tr{line-height:75px;}
+	.user_table_zsh thead tr th,.user_table_zsh tbody tr td{border:none;border-bottom:1px solid #d1d4d7;}
+	.user_table_zsh tbody tr{background-color:white !important;}
+	.input-group.areas_liandong select{margin-right:5px !important;}
+/*用户统计表结束*/
+/*板块样式页面开始*/
+	.module_page_top{background:#f8f9fa;}
+	.module_page_top .container-fluid{padding-left:0}
+	.module_page_top h5.page-title{/*text-indent:2em;*/margin:0;line-height:30px;display:inline-block;/*background:url("../img/home_icon5@2x.png")no-repeat left center;background-size:30px 30px;*/}
+	p.modules_small_tit,.module_bar_bottom .pull-right a,.module_top_edit  a{color:#A3B1CC;height: 21px;overflow: hidden;/* text-overflow: ellipsis; */}
+	.module_top_edit  a{line-height:30px;}
+	.module_bar_bottom img{width:46px;height:46px;}
+	.module_bar_bottom .pull-right{position:relative;top:25px;}
+	.module_bar_bottom .pull-right a,.module_top_edit  a{display:inline-block;}
+	.module_bar_bottom .pull-right a:first-child{margin-right:5px;}
+	.module_bar_bottom .pull-right a .glyphicons:before,.module_top_edit  a .glyphicons:before{padding:0;padding-top:2px;}
+	.module_top_edit  a .glyphicons:before{padding-top:7px;}
+	h4.mb-0.module_style_big_tit.ng-binding{height:26.4px;overflow:hidden;}
+/*板块样式页面结束*/
+/*街道列表管理页面开始*/
+	.modal-dialog.street_edit{max-width:700px !important;}
+	.street_edit div.col-md-7,.street_edit div.col-md-4{padding:0;}
+	.form-group.row.areas_liandong select{margin-right:5px;}
+	.street_form_btn_left{position:relative;left:-47%;}
+	.create_date:hover{cursor:pointer;}
+	.top_checkbox{border-bottom:1px solid #d1d4d7;}
+	.top_checkbox i:hover{cursor:pointer;}
+	div.add_street_footer{z-index:0;}
+	div.edit_street span.box,form.add_street div.form-group.row.areas_liandong .selBoxList .box{background-color:grey;}
+	td.Enable{color:black;}
+	td.NoEnable{color:red;}
+	.edit_box_footer{z-index:0;}
+/*街道列表管理页面结束*/
+	li.last-btn{position:relative;left:75.5%;}
+	.tab-pane.edit_tab{padding: 16px 0;}
+	.col-lg-12.edit_col-lg-12{padding: 0;}
+	.col-lg-12.edit_col-lg-12 .card{border: none;}
+	.col-lg-12.edit_col-lg-12 .card .card-block{padding: 20px 0;}
+	td.add_u.text-center:hover{cursor:pointer;}
+	tr.sons td:nth-child(2){text-indent:1em;}
+/*菜单管理列表*/
+	td.street_toal_name{text-indent:1em;}
+	tr.street_sons{display:none;}
+	span.expand{display:inline-block;width:100%;height:100%;}
+	tbody.public_tbody_border{border-top: 1px solid #d1d4d7 !important;}
+	thead.public_borderBottom th{border-bottom: 1px solid #d1d4d7 !important;border-top:none;}
+/*街道管理管理员页面开始*/
+	.streetUser.float-right.col-md-8{padding-right:0;position:relative;top:-38px;}
+	div.streetUserSearch{padding-right:5px;}
+	button.yq_btn{margin-right:5px;}
+	th.create_company_date,th.create_street_date{cursor:pointer;}
+	ol.breadcrumb.module_page_top {border-bottom: none;padding-left:0;}
+/*街道管理管理员页面结束*/
+/* 登录页面开始 */
+	body.login_back{background:url("../img/bg1.png")no-repeat left top rgba(2,135,198,0.7);background-size:100% 100%;}
+	.login_tit_btn{padding:15px 24px;background:linear-gradient(#00C1FC,#0283D5 );border:none;}
+	.login_Username_mark,.login_Pass_mark{background:#fff;}
+	.login_Username_mark{background:url("../img/name.png")no-repeat center center;}
+	.login_Pass_mark{background:url("../img/pass.png")no-repeat center center}
+	.login_footer{padding:8px 20px 0 20px;background:#E8F8FE;margin-top:13px;}
+	.login_footer_right{padding-top:8px;padding-bottom:8px;}
+	.login_footer_right a{display:inline-block;color:#20a8d8;}
+	.login_footer_left{padding:8px 0;color:#89A7BF;}
+	.login_header{padding-left:0;padding-right:0;padding-bottom:0;}
+	.login_btn{padding:12px 16px;border-radius:5px;background:#01A6EB;}
+	.login_pub_logo{position:absolute;left:40px;top:40px;}
+	.login_border_none{border:none;}
+/* 登录页面结束 */
+/*忘记密码页面开始*/
+	.left_login{color:white;text-decoration:none;}
+	.left_login:hover{color:white;text-decoration:none;}
+	.forpasTit{background:white;color:#01A6EB;}
+	.forpasBac{background:#F4F7FC;}
+/*忘记密码页面结束*/
+/*设置总管理员页面开始*/
+	span.adminSearch_btn:hover{cursor:pointer;}
+/*设置总管理员页面结束*/
+/* 保洁服务订单列表页开始 */
+	.serviceDetailBorder{border:none;margin-bottom:0;}
+	.serviceDetailBorder .card-block{padding:10px;}
+	.orderLeft{margin-top:10%;}
+	.orderLeft img{width:134px;height:134px;border-radius:50%;}
+	.orderLeft h5.orderName{line-height:60px;margin-bottom:0;}
+	.orderLeft span.orderPhone{display:inline-block;background: url("../img/mobil.png")no-repeat 15px center rgba(103,194,239,1);color:white;border-radius: 22px;width: 87%;font-size:1.25rem;line-height:45px;text-indent:1em;}
+	.orderRight p{margin-bottom:32px;color:#94A0B2;}
+	.orderRight p:last-child{margin-bottom:0;}
+	.orderRight p span{color:black;display:inline-block;width:25%;}
+	.orderTextArea{color:#94A0B2 !important;width:75% !important;display:inline-block;}
+	.stateP button{color:white;}
+	.listState button{color:white;}
+	.orderFilterSpan{color:#94A0B2;}
+	.orderFilterSpan+select{width:82px;}
+/* 保洁服务订单列表页结束 */

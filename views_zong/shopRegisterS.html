@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>智慧社区商家邀请注册第二步</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区商家邀请注册第二步">
+    <meta name="keyword" content="智慧社区商家邀请注册第二步">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/tether.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/libs/pace.min.js"></script>
+    <script src="js/libs/Chart.min.js"></script>
+    <script src="js/libs/gauge.min.js"></script>
+    <script src="js/libs/moment.min.js"></script>
+    <script src="js/libs/daterangepicker.js"></script>
+    <script src="js/views/shared.js"></script>
+    <script src="js/views/main.js"></script>
+    <script src="js/views/charts.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+</head>
+<body class="app flex-row align-items-center" style="background:url('./img/bg2.png')no-repeat left top;background-size:100% 100%;" >
+<img src="./img/logo2.png" class="login_pub_logo register_log" alt="左上角logo图">
+    <div class="container">
+        <h4 class="text-center register_top_tit">欢迎加入智慧社区</h4>
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card mx-3 regitster_zhihui_card">
+                    <div class="card-block p-1 regitster_zhihui">
+                        <h5>第二步：填写门店信息</h5>
+                        <p class="text-muted">
+                            填写门店信息以便用户搜索到您
+                        </p>
+                        <form action="" enctype="multipart/form-data" >
+                            <div class="form-group">
+                                <label for="" >企业全称</label>
+                                <input type="text" class="form-control companyName" placeholder="企业全称" required maxlength="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="">门店名称</label>
+                                <input type="text" class="form-control shopName" placeholder="门店名称" required maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="">门店所在地址</label>
+                                <input type="text" class="form-control shopAdress" placeholder="精确到门牌号码" required maxlength="200">
+                            </div>
+                            <button type="button" class="btn btn-block btn-primary" onClick="shopUserAdd()">
+                                提交申请
+                            </button>
+                            <p class="text-muted footer text-center">
+                                申请通过后将发送邮件通知您,请注意查收
+                            </p>
+                        </form>
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+        <p class="text-center fixed-bottom register_footer">© 2017 ChinaScope Limited All Rights Reserved 沪ICP备11039653号-7</p>
+    </div>
+    
+</body>
+</html>
+<script type="text/javascript">
+var shopDataAll=JSON.parse(window.sessionStorage.getItem("shopData"));
+    function shopUserAdd(){
+        var companyName=$(".companyName").val(),
+            storeName=$(".shopName").val(),
+            address=$(".shopAdress").val(),
+            Type=parseInt(shopDataAll['type']);
+        /*给企业名称、门店名称和门店地址赋值*/
+            shopDataAll['companyName']=companyName;
+            shopDataAll['storeName']=storeName;
+            shopDataAll['address']=address;
+            shopDataAll['type']=Type;
+        if(companyName==""){
+            alert("企业名称不能为空！");
+        }else if(storeName==""){
+            alert("门店名称不能为空！");
+        }else if(address==""){
+            alert("门店所在地址不能为空！");
+        }else{
+            $.ajax({
+                type:"POST",
+                url:"http://api.jgsoft.org/wcommunity/api/mailbox/submit",
+                data:shopDataAll,
+                success:function(response){
+                    if(response.code !== "200"){
+                        alert("添加商家发生错误、请联系后台管理员！");
+                    } else {
+                        alert("恭喜你、成功添加了一条商家信息！");
+                    }
+                },
+                error:function(){
+                    alert("对不起、当前网速较慢、请重新邀请商家！");
+                }
+            });
+        } 
+    };
+</script>

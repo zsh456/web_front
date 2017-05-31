@@ -1,0 +1,304 @@
+@charset"utf-8";
+main{
+    background-color: #EFF3F8;
+}
+table{
+    background-color: white;
+}
+
+#firstPage_ym .table th,.table td{
+    vertical-align:middle;
+}
+
+/*主管理页面 侧边*/
+.sidebar .nav .nav-title::before{
+    content:"——";
+}
+.sidebar .nav .nav-title::after{
+    content:'——';
+}
+
+
+/*板块样式中的 社区政务 样式设定*/
+#cardStyleArea_ym .add button{
+    box-sizing:border-box;
+    width:80px;
+    height:34px;
+    font-size:13px;
+    margin-top:15px;
+    margin-bottom:15px;
+}
+/*#cardStyleArea_ym .head{
+    overflow:hidden;
+}*/
+#cardStyleArea_ym .headTop_ym{
+    overflow:hidden;
+    height:70px;
+    line-height:70px;
+}
+#cardStyleArea_ym .headTop_ym a{
+    color:#A3B1CC;
+}
+
+
+#cardStyleArea_ym .headLeft_ym{
+    float:left;
+}
+/*#cardStyleArea_ym .head .hr_ym{
+    float:left;
+    height:1px;
+}*/
+#cardStyleArea_ym .headRight_ym{
+    float:right;
+}
+#cardStyleArea_ym .headTop_ym {
+
+}
+#cardStyleArea_ym .head i {
+    /*line-height:70px;*/
+    vertical-align:middle;
+}
+#cardStyleArea_ym .head h4{
+    margin-left:24px;
+    font-size:20px;
+}
+#cardStyleArea_ym .head_ym .headRight_ym{
+    text-align:right;
+}
+
+
+#cardStyleTitleModal_ym .form-group-row{
+    height:35px;
+}
+
+#cardStyleContent_ym .card{
+    padding:10px 15px 10px 25px ;
+    background-color: white;
+}
+#cardStyleContent_ym a{
+    color:#A3B1CC;
+}
+#cardStyleContent_ym .card>div{
+    position:relative;
+    /*line-height:60px;*/
+    margin-top:10px;
+}
+#cardStyleContent_ym .card>div>a:nth-of-type(1){
+    position:absolute;
+    top:10px;
+    right:60px;
+    vertical-align:middle;
+}
+#cardStyleContent_ym .card>div>a:nth-of-type(2){
+    position:absolute;
+    right:0;
+    margin-top:10px;
+    vertical-align:middle;
+}
+#cardStyleContent_ym .card>div> i{
+    /*height:46px;*/
+}
+#cardStyleContent_ym .card .cardStyleContentEdit_ym{
+    /*display:inline-block;*/
+    /*line-height:46px;*/
+}
+
+/*板块样式中的 智慧党建 样式设定*/
+#intelBuilder_ym .headTop_ym{
+    overflow:hidden;
+    height:60px;
+    line-height:60px;
+}
+#intelBuilder_ym .headLeft_ym{
+    float:left;
+}
+#intelBuilder_ym .headRight_ym{
+    float:right;
+}
+#intelBuilder_ym .headRight_ym i {
+    vertical-align:middle;
+}
+#intelBuilder_ym .headRight_ym a {
+    vertical-align:middle;
+}
+
+#intelBuilderContent_ym .card{
+    padding:10px 10px 10px 25px ;
+    background-color: white;
+}
+#intelBuilderContent_ym a{
+    color:#A3B1CC;
+}
+
+#intelBuilderContent_ym .card>div{
+    position:relative;
+    margin-top:10px;
+}
+#intelBuilderContent_ym .card>div>a:nth-of-type(1){
+    position:absolute;
+    right:60px;
+    margin-top:10px;
+    vertical-align:middle;
+}
+#intelBuilderContent_ym .card>div>a:nth-of-type(2){
+    position:absolute;
+    right:0;
+    margin-top:10px;
+    vertical-align:middle;
+}
+
+
+#cardStylePage_ym{
+    float:right;
+    margin-right:30px;
+}
+
+/*平安社区 模块*/
+#peacefulCommunity{
+    display:block;
+}
+
+
+
+
+
+
+
+
+
+/*街道管理 页面*/
+
+#streetAdmin table{
+    background-color: white;
+}
+
+#page{
+    float:right;
+}
+
+
+
+#totalAdmin table{
+    background-color: white;
+}
+
+
+
+/*#menuAdmin_ym a:hover{
+   cursor:pointer;
+}*/
+
+
+/*菜单管理模块 */
+#menuAdmin  #streetAdminOpenContent_ym{
+
+}
+
+#menuAdmin {
+    position:relative;
+}
+#menuAdmin #menuAdminAdd_ym{
+    position:absolute;
+    right:10px;
+    top:20px;
+}
+
+/*登录页面 */
+#login_ym{
+    background: url('../img/bg1.png')   ;
+}
+#login_ym .h4Button_ym{
+    background:linear-gradient(#00C1FC,#0283D5 ) ;   ;
+}
+
+
+/* 主管理 侧边栏 界面*/
+#threeCl_ym{
+    padding-left:0;
+    height:100%;
+    /*position:fixed;*/
+    /*top:55px;left:200px;;*/
+    background-color: #DAE1E8;
+}
+#threeCl_ym>li{
+    text-align:center;
+}
+#threeCl_ym>li>a:hover{
+    background-color: #B8C0C9;
+}
+
+
+
+/*商家 页面 */
+#custEditModal_ym label{
+    justify-content:flex-start;
+
+}
+#custEditModal_ym input{
+    border:none;
+    overflow:auto;
+}
+
+.rotate_ym{
+    cursor:pointer;
+}
+
+
+
+
+
+
+
+
+
+#cardStyle  .head span{
+    /*float:left;*/
+}
+#cardStyle .head a,i{
+    /*float:right;*/
+}
+
+#cardStyle h1,h2,h3,h4,h5,h6{
+    display:inline-block;
+}
+#cardStyle .modal-body .leftList{
+    width:100px;
+    float:left;
+}
+#cardStyle span{
+
+    /*display:inline-block;*/
+}
+
+#cardStyle .content .card{
+    /*    width:388px;
+        height:122px;*/
+
+}
+
+#streetAdmin .search{
+    float:right;
+}
+
+
+
+
+
+
+
+
+
+
+
+.modal-body ul {
+    padding:0;
+}
+.editModalLeft {
+    display:inline-block;
+    width:100px;
+    /*position:absolute;*/
+    left:0
+}
+ul{
+    list-style:none;
+}

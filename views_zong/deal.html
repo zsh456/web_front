@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>智慧社区交易统计</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区交易统计">
+    <meta name="keyword" content="智慧社区交易统计">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <link href="css/total_ymm.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/zTreeStyle.css" type="text/css">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="./js/views/totalAngular.js"></script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" ng-app="project_app" ng-controller="deal" ng-cloak>
+    <!-- 引入公共header部分 -->
+    <div ng-include="'header.html'"></div>
+    <div class="app-body">
+        <!-- 引入公共sideBar区域开始 -->
+        <div ng-include="'sideBar.html'"></div>
+        <!-- Main content -->
+        <main class="main">
+            <div class="container-fluid self_container_padding">
+                <div class="animated">
+                    <img src="./img/loading.png" alt="开发中引导页" class="load_img">
+                </div>
+            </div>
+    </div>
+    </div>
+    </main>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+httpBaseUrl = "http://Dev.jgsoft.org";
+var app = angular.module("project_app", ['ui.bootstrap']);
+var loginKey = JSON.parse(window.sessionStorage.getItem("userData"));
+if (loginKey == null) {
+    alert("请先登录！");
+    window.location.href = "./index.html";
+} else {
+    app.controller("deal", function($scope, $http, $rootScope) {
+        // 取得用户登录的帐号相关信息
+        $scope.userLoginUserData = JSON.parse(window.sessionStorage.getItem("userData"));
+    });
+};
+</script>

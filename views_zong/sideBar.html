@@ -1,0 +1,21 @@
+ <!-- 侧边栏 -->
+ <!-- {{userLoginUserData.menuList}} -->
+ <!-- {{baseUrl|limitTo:40}} -->
+	<div class="sidebar">
+	    <nav class="sidebar-nav self_sidebar">
+	        <ul class="nav">
+	            <li class="nav-title sideFirstLi" ng-repeat="x in userLoginUserData.menuList">
+	                &mdash;&mdash;&nbsp;&nbsp;{{x.title}}&nbsp;&nbsp;&mdash;&mdash;
+	                <ul class="nav secondUl">
+	                	<li class="nav-item" ng-repeat="y in x.child">
+		                	<a class="nav-link secondTitle" href="{{y.path}}" onClick="location.reload()">
+		                       {{y.title}}
+		                        <span class="badge badge-info"></span>
+		                    </a>
+	            		</li>
+	                </ul>
+	            </li>
+	            <!-- <li class="divider"></li> -->
+	        </ul>
+	    </nav>
+	</div>

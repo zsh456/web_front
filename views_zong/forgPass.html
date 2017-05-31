@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>智慧社区后台重置密码</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区后台重置密码">
+    <meta name="keyword" content="智慧社区后台重置密码">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/total_ym.css" />
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="js/views/totalAngular.js"></script>
+</head>
+
+<body class="app flex-row align-items-center login_back" ng-app="project_app" ng-controller="forgetPass" ng-cloak>
+    <img src="./img/logo1.png" class="login_pub_logo" alt="左上角logo图">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card-group mb-0">
+                    <div class="card login_border_none">
+                        <div class="card-header login_header">
+                            <button type="button" class="btn btn-primary btn-lg btn-block login_tit_btn">
+                                <a href="./index.html" class="left_login pull-left">&larr;</a> 重置密码
+                            </button>
+                        </div>
+                        <div class="card-block p-2">
+                            <form novalidate name="forgForm">
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon forpasTit">绑定手机号</span>
+                                    <input type="text" id="username3" name="username" class="form-control forpasBac" ng-model="phone" required minlength="11" maxlength="11" ng-pattern="/^1[3578]{1}[0-9]{9}/">
+                                </div>
+                                <div class="input-group mb-1" style="color:red;" ng-show="forgForm.username.$dirty && forgForm.username.$invalid">
+                                    <span ng-show="forgForm.username.$error.required">手机号是必须的</span>
+                                    <span ng-show="forgForm.username.$error.pattern">请输入正确的手机号</span>
+                                </div>
+                                <div class="input-group mb-1">
+                                    <input type="text" id="input2-group2" name="messageYZM" class="form-control forpasBac" placeholder="" ng-model="PhoneMessage" minlength="4" maxlength="4" required ng-pattern="/[\d]{4}/">
+                                    <span class="input-group-btn">
+                                            <button type="button" class="btn btn-primary" ng-click="messageYz()">获取验证码</button>
+                                        </span>
+                                </div>
+                                <div class="input-group mb-1" style="color:red;" ng-show="forgForm.messageYZM.$dirty && forgForm.messageYZM.$invalid">
+                                    <span ng-show="forgForm.messageYZM.$error.required">验证码是必须的</span>
+                                    <span ng-show="forgForm.messageYZM.$error.pattern">请输入4位数字验证码</span>
+                                </div>
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon forpasTit">
+                                            新密码&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    <input type="password" id="username3" name="pass" class="form-control forpasBac" ng-model="loginPass" required minlength="6" maxlength="18" ng-pattern="/[\w]{6,18}/">
+                                </div>
+                                <div class="input-group mb-1" style="color:red;" ng-show="forgForm.pass.$dirty && forgForm.pass.$invalid">
+                                    <span ng-show="forgForm.pass.$error.required">密码是必须的</span>
+                                    <span ng-show="forgForm.pass.$error.pattern">请输入至少6位数的密码</span>
+                                </div>
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon forpasTit">新密码确认</span>
+                                    <input type="password" id="username3" name="rePass" class="form-control forpasBac" ng-model="loginRepass" required minlength="6" maxlength="18" ng-pattern="/[\w]{6,18}/">
+                                </div>
+                                <div class="input-group mb-1" style="color:red;" ng-show="forgForm.rePass.$dirty && forgForm.rePass.$invalid">
+                                    <span ng-show="forgForm.rePass.$error.required">确认密码是必须的</span>
+                                    <span ng-show="forgForm.rePass.$error.pattern">请输入至少6位数的确认密码</span>
+                                </div>
+                                <div class="input-group mb-1" style="color:red;" ng-show="forgForm.rePass.$valid">
+                                    <span ng-show="loginPass !== loginRepass"> 两次密码输入不一致
+                                        </span>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-md btn-block login_btn" ng-disabled="forgForm.username.$dirty && forgForm.username.$invalid || forgForm.username.$dirty && forgForm.username.$invalid || forgForm.pass.$dirty && forgForm.pass.$invalid || forgForm.rePass.$dirty && forgForm.rePass.$invalid" ng-click="forPasLogin()" ng-keypress="forgetPass($event)">确&nbsp;&nbsp;定</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+httpBaseUrl = "http://Dev.jgsoft.org";
+var app = angular.module("project_app", ['ui.bootstrap']);
+app.controller("forgetPass", function($scope, $http) {
+    // 获得短信验证
+    $scope.messageYz = function() {
+        if ($scope.phone == undefined) {
+            alert("请输入11位正确手机号码！");
+        } else {
+            $http.get(httpBaseUrl + "/api/Mailbox/SendSMSVCode?mobile=" + $scope.phone + "&key=register").then(function(response) {
+                if (response.data.code !== 200) {
+                    alert(response.data.msg);
+                } else if (response.data.code == 200) {
+                    alert("恭喜你、短信验证码已发送、请注意查收！");
+                }
+            }, function() {
+                alert("当前服务器请求人数较多、请稍候再试！");
+            });
+        };
+    };
+    // 登录
+    $scope.forPasLogin = function() {
+        var forpassloginData = {
+            "vcode": $scope.PhoneMessage,
+            "mobile": $scope.phone,
+            "passWord": $scope.loginRepass
+        };
+        // console.log(forpassloginData);
+        if ($scope.phone == undefined) {
+            alert("请输入11位正确手机号码！");
+        } else if ($scope.PhoneMessage == undefined) {
+            alert("请输入4位数字验证码！");
+        } else if ($scope.loginPass == undefined) {
+            alert("请输入至少6位数的密码！");
+        } else if ($scope.loginRepass == undefined) {
+            alert("请输入至少6位数的确认密码！");
+        } else if ($scope.loginPass !== $scope.loginRepass) {
+            alert("两次密码输入不一致、请重新输入！");
+        } else {
+            $http.post(httpBaseUrl + "/api/streetadmin/ResetLoginPassWord", forpassloginData).then(function(response) {
+                if (response.data.code !== 200) {
+                    alert(response.data.msg);
+                } else if (response.data.code == 200) {
+                    alert("恭喜你、密码修改成功,请重新登录！");
+                    window.location.href = "./index.html";
+                }
+            })
+        };
+    };
+    /*键盘回车执行忘记密码操作*/
+    $scope.forgetPass = function($event) {
+        if ($event.keyCode == 13) {
+            forPasLogin();
+        }
+    };
+});
+</script>

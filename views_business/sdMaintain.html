@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>智慧社区商家管理水电维修</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区商家管理水电维修">
+    <meta name="keyword" content="智慧社区商家管理水电维修">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <link href="css/total_ymm.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/zTreeStyle.css" type="text/css">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="./js/views/totalAngular.js"></script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" ng-app="project_business" ng-controller="businessDmaintain" ng-cloak>
+    <!-- 引入公共header部分 -->
+    <div ng-include="'header.html'"></div>
+    <div class="app-body">
+        <!-- 引入公共sideBar区域开始 -->
+        <div ng-include="'sideBar.html'"></div>
+        <!-- Main content -->
+        <main class="main">
+            <div class="container-fluid self_container_padding">
+                <div class="animated">
+                    <div class="card users_card">
+                        <div class="card-header user_add_top hidden-md-down padding-right-none">
+                            <span class="orderFilterSpan">订单状态&nbsp;</span>
+                            <select class="btn btn-md user_add_btn" style="margin-top:0;" ng-options="x.id as x.name for x in orderType" ng-model="orderTy" ng-change="orderFilter(orderTy)">
+                            </select>
+                            <div class="input-group col-md-4 pull-right padding-right-none">
+                                <input type="text" class="form-control" placeholder="关键词搜索" ng-keypress="search_order($event)">
+                            </div>
+                        </div>
+                        <div class="card-block users_list">
+                            <table class="table table-striped table-bordered datatable user_table_zsh">
+                                <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th class="hidden-md-down">订单号</th>
+                                        <th class="hidden-md-down">下单时间</th>
+                                        <th class="hidden-md-down create_street_date" ng-click="orderSort();">
+                                            <i class="fa fa-arrow-down"></i> 上门时间
+                                        </th>
+                                        <th>状态</th>
+                                        <th class="hidden-md-down">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in orders" class="del{{x.updateId}}">
+                                        <td ng-bind="x.applyName">
+                                        </td>
+                                        <td class="hidden-md-down" ng-bind="x.orderNum">
+                                        </td>
+                                        <td class="hidden-md-down" ng-bind="x.createDate | date:'yyyy-MM-dd HH:mm:ss'">
+                                        </td>
+                                        <td class="hidden-md-down" ng-bind="x.updoorDate | date:'yyyy-MM-dd HH:mm:ss'">
+                                        </td>
+                                        <td class="listState">
+                                            <button class="btn btn-md" ng-class='{0:"btn-info",1:"btn-warning",2:"btn-success",3:" "}[{{x.state}}]' ng-bind='{0:"未安排",1:"已安排",2:"完成",3:"取消"}[{{x.state}}]'>
+                                            </button>
+                                        </td>
+                                        <td class="hidden-md-down">
+                                            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#street_Modal" ng-click="editOrder(x.id,x.updateId);">
+                                                <i style="display:inline-block;width:14px;height:14px;background:url('./img/detail.png')no-repeat center center;"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-md" data-toggle="modal" data-target="#delCleaner" ng-click="orderDel(x.updateId);" ng-show="{{x.state}}==3">
+                                                <i class="fa fa-trash-o"></i>
+                                            </button>
+                                        </td>
+<!-- 编辑订单 -->
+<div class="modal fade" id="street_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog street_edit">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">详情</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row serviceDetail">
+                    <div class="col-sm-4 col-md-4">
+                        <div class="card serviceDetailBorder">
+                            <div class="card-block text-center orderLeft">
+                                <img src="./img/bg2.png" alt="订单头像">
+                                <h5 class="orderName" ng-bind="singleOrder.name">
+                                </h5>
+                                <span class="orderPhone" ng-bind="singleOrder.phone">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-md-8">
+                        <div class="card serviceDetailBorder">
+                            <div class="card-block orderRight">
+                                <p class="clearfix">
+                                    <span class="pull-left">订单号</span> 
+                                    <span class="orderTextArea pull-left" ng-bind="singleOrder.orderNum"></span>
+                                </p>
+                                <p class="clearfix">
+                                    <span class="pull-left">上门时间</span>
+                                    <span class="orderTextArea pull-left" ng-bind="singleOrder.updoorDate | date:'yyyy-MM-dd HH:mm:ss'"></span>
+                                </p>
+                                <p class="clearfix">
+                                    <span class="pull-left">地址</span>
+                                    <span class="orderTextArea pull-left" ng-bind="singleOrder.addrInfo"></span>
+                                </p>
+                                <p class="clearfix">
+                                    <span class="pull-left">留言</span>
+                                    <span class="orderTextArea pull-left" ng-bind="singleOrder.message"></span>
+                                </p>
+                                <p class="stateP">
+                                    <span>状态</span>
+                                    <button type="button" class="btn btn-md" ng-repeat="x in singleOrderState" id="{{x.id}}" ng-click="clickState($event)" style="margin-right:5px;" ng-bind="x.name">
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer edit_box_footer">
+                <div>
+                    <button type="button" class="btn btn-primary btn-success" ng-click="orderEditConfirm()">
+                        保存
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<!-- 删除订单 -->
+<div class="modal fade show" id="delCleaner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-xs">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">提示</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>您确定要删除该笔订单吗?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-ladda btn-deleteok" ng-click="orderDelConfirm()">
+                    确定
+                </button>
+                <button type="button" class="btn btn-secondary " data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <section class="pull-right">
+                                <pagination items-per-page="items_per_page" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged(currentPage)" previous-text="上一页" next-text="下一页"></pagination>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+httpBaseUrl = "http://api.jgsoft.org";
+var loginKey = JSON.parse(window.sessionStorage.getItem("userData"));
+var app = angular.module("project_business", ['ui.bootstrap']);
+if (loginKey == null) {
+    alert("请先登录！");
+    window.location.href = "../views_zong/index.html";
+} else {
+    app.controller("businessDmaintain", function($scope, $http, $rootScope, $location) {
+        /*取得登录的帐号信息*/
+        $scope.userLoginUserData = JSON.parse(window.sessionStorage.getItem("userData"));
+        $scope.userLoginID = $scope.userLoginUserData.loginId;
+        /*筛选选项*/
+        $scope.orderType = [{
+            "id": "-1",
+            "name": "全部"
+        }, {
+            "id": "0",
+            "name": "未处理"
+        }, {
+            "id": "1",
+            "name": "已安排"
+        }, {
+            "id": "2",
+            "name": "完成"
+        }, {
+            "id": "3",
+            "name": "取消"
+        }];
+        /*详情模态框状态选项*/
+        $scope.singleOrderState = [{
+            "id": "0",
+            "name": "未处理"
+        }, {
+            "id": "1",
+            "name": "已安排"
+        }, {
+            "id": "2",
+            "name": "完成"
+        }, {
+            "id": "3",
+            "name": "取消"
+        }];
+        $scope.orderTy = $scope.orderType['0']['id'];
+        /*订单列表*/
+        $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerListByType?&serllerId=" + $scope.userLoginID + "&type=3&skip=1&limit=10&sort=-1&keyWord=").then(function(response) {
+            if (response.data.code !== "200") {
+                alert("请求订单列表发生错误、请联系后台管理员！");
+            } else {
+                if (response.data.obj == "") {
+                    alert("当前服务项目下面暂无交易的订单！");
+                } else {
+                    $scope.orders = response.data.obj;
+                    $scope.items_per_page = 10; // 每页显示的条数
+                    $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                    $scope.totalItems = response.data.sumcount; // 总条数
+                    $scope.currentPage = 1; // 指定当前页码为第一页
+                    $scope.pageChanged = function(activePage) {
+                        $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerListByType?&serllerId=" + $scope.userLoginID + "&type=3&skip=1&limit=10&sort=-1&keyWord=").then(function(response) {
+                            if (response.data.code !== "200") {
+                                alert("请求订单列表发生错误、请联系后台管理员！");
+                            } else {
+                                $scope.orders = response.data.obj;
+                            }
+                        }, function() {
+                            alert("对不起、列表获取失败、请重新获取！");
+                        });
+                    };
+
+                };
+            }
+        }, function() {
+            alert("对不起、当前网速较慢、请重新获取列表信息！");
+        });
+        /*订单搜索*/
+        $scope.search_order = function($event) {
+            if($event.keyCode==13){
+                $scope.keywords = angular.element($event.target).val();
+            $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerListByType?&serllerId=" + $scope.userLoginID + "&type=3&skip=1&limit=10&sort=-1&keyWord=" + $scope.keywords).then(function(response) {
+                if (response.data.code !== "200") {
+                    alert("请求订单列表发生错误、请联系后台管理员！");
+                } else {
+                    if (response.data.obj == "") {
+                        $scope.orders = response.data.obj;
+                        alert("对不起、未查询到与之匹配的订单信息！");
+                        $scope.items_per_page = 10; // 每页显示的条数
+                        $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                        $scope.totalItems = 0; // 总条数
+                        $scope.currentPage = 1; // 指定当前页码为第一页
+                    } else if (response.data.obj !== "") {
+                        $scope.orders = response.data.obj;
+                        $scope.items_per_page = 10; // 每页显示的条数
+                        $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                        $scope.totalItems = response.data.sumcount; // 总条数
+                        $scope.currentPage = 1; // 指定当前页码为第一页
+                        $scope.pageChanged = function(activePage) {
+                            $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerListByType?&serllerId=" + $scope.userLoginID + "&type=3&skip=" + activePage + "&limit=10&sort=-1&keyWord=" + $scope.keywords).then(function(response) {
+                                if (response.data.code !== "200") {
+                                    alert("请求订单列表发生错误、请联系后台管理员！");
+                                } else {
+                                    $scope.orders = response.data.obj;
+                                }
+                            }, function() {
+                                alert("对不起、列表获取失败、请重新获取！");
+                            });
+                        };
+                    };
+                }
+            });
+            };
+        };
+        /*订单排序*/
+        $scope.sortFlag = '-1'; //声明标识变量并初始化排序方式
+        $scope.orderSort = function() {
+            var th_sort = $("th.create_street_date");
+            $scope.sortFlag = $scope.sortFlag;
+            if ($scope.sortFlag === '-1') {
+                th_sort.children("i").replaceWith("<i class='fa fa-arrow-up'></i>");
+                $scope.sortFlag = '1';
+                $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerListByType?&serllerId=" + $scope.userLoginID + "&type=3&skip=1&limit=10&sort=" + $scope.sortFlag + "&keyWord=").then(function(response) {
+                    if (response.data.code !== "200") {
+                        alert("请求订单列表发生错误、请联系后台管理员！");
+                    } else {
+                        $scope.orders = response.data.obj;
+                    }
+                });
+            } else if ($scope.sortFlag !== '-1') {
+                th_sort.children("i").replaceWith("<i class='fa fa-arrow-down'></i>");
+                $scope.sortFlag = '-1';
+                $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerListByType?&serllerId=" + $scope.userLoginID + "&type=3&skip=1&limit=10&sort=" + $scope.sortFlag + "&keyWord=").then(function(response) {
+                    if (response.data.code !== "200") {
+                        alert("请求订单列表发生错误、请联系后台管理员！");
+                    } else {
+                        $scope.orders = response.data.obj;
+                    }
+                });
+            }
+        };
+        /*订单状态筛选*/
+        $scope.orderFilter = function(orderFilterState) {
+            $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerListByType?&serllerId=" + $scope.userLoginID + "&type=3&skip=1&limit=10&sort=-1&keyWord=&state=" + orderFilterState).then(function(response) {
+                if (response.data.code !== "200") {
+                    alert("请求订单列表发生错误、请联系后台管理员！");
+                } else {
+                    if (response.data.obj == "") {
+                        $scope.orders = response.data.obj;
+                        alert("暂未筛选到与之匹配的订单！");
+                    } else {
+                        $scope.orders = response.data.obj;
+                        $scope.items_per_page = 10; // 每页显示的条数
+                        $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                        $scope.totalItems = response.data.sumcount; // 总条数
+                        $scope.currentPage = 1; // 指定当前页码为第一页
+                        $scope.pageChanged = function(activePage) {
+                            $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerListByType?&serllerId=" + $scope.userLoginID + "&type=3&skip=1&limit=10&sort=-1&keyWord=&state=" + orderFilterState).then(function(response) {
+                                if (response.data.code !== "200") {
+                                    alert("请求订单列表发生错误、请联系后台管理员！");
+                                } else {
+                                    $scope.orders = response.data.obj;
+                                }
+                            }, function() {
+                                alert("对不起、列表获取失败、请重新获取！");
+                            });
+                        };
+
+                    };
+                }
+            }, function() {
+                alert("对不起、当前网速较慢、请重新获取列表信息！");
+            });
+        };
+        /*订单编辑*/
+        $scope.editOrder = function(editOrderId, updateId) {
+            /*查询单条信息*/
+            $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/getSerllerInfoById?id=" + editOrderId + "&sellerId=" + $scope.userLoginID).then(function(response) {
+                if (response.data.code !== "200") {
+                    alert("获取该订单失败、请联系后台管理员！");
+                } else {
+                    $scope.singleOrder = response.data.obj;
+                    console.log($scope.singleOrder);
+                    /*订单状态在页面呈现勾稽关系*/
+                    $scope.orderState = $scope.singleOrder.state;
+                    $(".stateP button").each(function() {
+                        var activeState = $(this).attr("id");
+                        if ($scope.orderState == activeState) {
+                            $(this).addClass("btn-info");
+                        }
+                    });
+                    /*订单状态点击时样式变换*/
+                    $scope.clickState = function($event) {
+                        var activeSta = angular.element($event.target);
+                        activeSta.addClass("btn-info").siblings().removeClass("btn-info");
+                    };
+                    $scope.orderEditConfirm = function() {
+                        /*获取最终状态点击时的id值*/
+                        var finalState = $(".stateP button.btn-info").attr("id");
+                        $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/updateState?state=" + finalState + "&id=" + updateId).then(function(response) {
+                            if (response.data.code !== "200") {
+                                alert("编辑订单发生错误、请联系后台管理员！");
+                            } else {
+                                alert("恭喜你、成功编辑该笔订单！");
+                                window.location.reload();
+                            }
+                        }, function() {
+                            alert("对不起、当前网速较慢、请重新编辑该笔订单！");
+                        })
+                    };
+
+                }
+            }, function() {
+                alert("对不起、当前网速较慢、请重新获取该订单信息！");
+            });
+        };
+        /*订单删除(逻辑删除)*/
+        $scope.orderDel = function(updateId) {
+            $scope.orderDelConfirm = function() {
+                $http.get(httpBaseUrl + "/wcommunity/api/boss/seller/updateState?state=-1&id=" + updateId).then(function(response) {
+                    if (response.data.code !== "200") {
+                        alert("删除订单发生错误、请联系后台管理员！");
+                    } else {
+                        alert("恭喜你、成功删除该笔订单！");
+                        $("tr.del" + updateId).remove();
+                        window.location.reload();
+                    }
+                }, function() {
+                    alert("对不起、当前网速较慢、请重新删除该笔订单！");
+                })
+            };
+        };
+
+    });
+};
+</script>

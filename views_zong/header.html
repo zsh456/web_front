@@ -1,0 +1,31 @@
+<header class="app-header navbar">
+        <button class="navbar-toggler mobile-sidebar-toggler hidden-lg-up nav_zhedie" type="button">☰</button>
+        <a class="navbar-brand left_top_log_bar" href="#"></a>
+        <fieldset class="form-group hidden-md-down place_choice">
+            <div class="controls">
+                <div class="dropdown header_top">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        桃花镇
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="streetchange">
+                        <a class="dropdown-item" i="2031954678">桃花镇</a>
+                        <a class="dropdown-item" i="3134986257">梅林镇</a>
+                        <a class="dropdown-item" i="7513879624">河洲街道</a>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item dropdown pull-right">
+                <a class="nav-link dropdown-toggle nav-link user_img" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span class="hidden-md-down">{{userLoginUserData.loginName}}</span>
+                    <img src="{{userLoginUserData.img}}" class="img-avatar" alt="登录管理员头像">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right layoutA">
+                    <a class="dropdown-item text-center" href="./index.html">
+                        退出
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </header>

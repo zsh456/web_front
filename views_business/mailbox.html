@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>智慧社区商家信箱管理</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区商家信箱管理">
+    <meta name="keyword" content="智慧社区商家信箱管理">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <link href="css/total_ymm.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/zTreeStyle.css" type="text/css">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="./js/views/totalAngular.js"></script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" ng-app="project_business" ng-controller="mailBox" ng-cloak>
+    <!-- 引入公共header部分 -->
+    <div ng-include="'header.html'"></div>
+    <div class="app-body">
+        <!-- 引入公共sideBar区域开始 -->
+        <div ng-include="'sideBar.html'"></div>
+        <!-- 主要内容区 -->
+        <main class="main">
+            <div class="container-fluid">
+                <div class="animated">
+                    <div class="card users_card">
+                        <div class="card-header user_add_top hidden-md-down">
+                            <div class="input-group col-md-4" style="padding-left:0;">
+                                <input type="text" class="form-control" placeholder="关键词搜索" ng-keypress="search($event)">
+                            </div>
+                        </div>
+                        <div class="card-block users_list">
+<table class="table table-striped table-bordered datatable user_table_zsh">
+    <thead>
+        <tr>
+            <th>用户名</th>
+            <th>事件</th>
+            <th class="hidden-md-down">行政地区</th>
+            <th class="hidden-md-down">接收时间</th>
+            <th class="hidden-md-down">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="x in mailboxAll">
+            <td ng-bind="x.name">
+            </td>
+            <td ng-bind="x.eventMsg"></td>
+            <td class="hidden-md-down" ng-bind="x.province+'/'+x.city+'/'+x.county+'/'+x.streetName">
+            </td>
+            <td class="hidden-md-down" ng-bind="x.createDate | date:'yyyy-MM-dd HH:mm:ss'">
+            </td>
+            <td class="hidden-md-down">
+                <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#mailBoxEditModal_ym" ng-click="editUser(x.id)" ng-show="{{x.state}}==0" ng-disabled="{{logID}}!=={{x.checkId}}">
+                    <i style="display:inline-block;width:14px;height:14px;background:url('./img/detail.png')no-repeat center center;"></i>
+                </button>
+                <span ng-bind='{2:"已拒绝",1:"已通过"}[{{x.state}}]'></span>
+            </td>
+            <!-- 列表 操作模态框-->
+            <div class="modal fade " id="mailBoxEditModal_ym" role="dialog" style="" aria-hidden="true">
+                <div class="modal-dialog street_edit" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" ng-bind="singUserData.eventMsg"></h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-md-2 form-control-label">用户名</label>
+                                    <div class="col-md-10 " style="color:grey" ng-bind="singUserData.name">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2">联系电话</label>
+                                    <div class="col-md-10" style="color:grey" ng-bind="singUserData.mobile">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2">常用邮箱</label>
+                                    <div class="col-md-10" style="color:grey" ng-bind="singUserData.email">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2">行政区域</label>
+                                    <div class="col-md-10" style="color:grey" ng-bind="singUserData.province+'/'+singUserData.city+'/'+singUserData.county+'/'+singUserData.streetName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2">企业全称</label>
+                                    <div class="col-md-10" style="color:grey" ng-bind="singUserData.companyName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2">门店名称</label>
+                                    <div class="col-md-10" style="color:grey" ng-bind="singUserData.storeName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2">门店地址</label>
+                                    <div class="col-md-10" style="color:grey" ng-bind="singUserData.address">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" style="justify-content:space-between">
+                            <div>
+                                <button class="btn btn-danger"  ng-click="shUser(2)">拒绝</button>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-success btn-ladda btn-save" ng-click="shUser(1)">通过并发送通知邮件</button>
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tr>
+    </tbody>
+</table>
+                            <section class="pull-right">
+                                <pagination items-per-page="items_per_page" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged(currentPage)" previous-text="上一页" next-text="下一页"></pagination>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.conainer-fluid -->
+        </main>
+        </div>
+</body>
+
+</html>
+<script type="text/javascript">
+httpBaseUrl = "http://Dev.jgsoft.org";
+var app = angular.module("project_business", ['ui.bootstrap']);
+var loginKey = JSON.parse(window.sessionStorage.getItem("userData"));
+if (loginKey == null) {
+    alert("请先登录！");
+    window.location.href = "./index.html";
+} else {
+    app.controller("mailBox", function($scope, $http) {
+        // 取得用户登录的帐号相关信息
+        $scope.userLoginUserData = JSON.parse(window.sessionStorage.getItem("userData"));
+        $scope.logID = JSON.parse(window.sessionStorage.getItem("userData")).loginId;
+        $scope.Type = JSON.parse(window.sessionStorage.getItem("userData")).adminType;
+        // 请求信箱列表
+        $http.get("http://api.jgsoft.org/wcommunity/api/mailbox/getMyMailBox?uid="+$scope.logID+"&type="+$scope.Type+"&skip=1&limit=10&keyWord=").then(function(response){
+            if(response.data.code !== "200"){
+                alert("获取信箱列表发生错误、请联系后台管理员！");
+            }else{
+                if(response.data.obj == ""){
+                    alert("当前暂无受邀请的街道管理员信息！");
+                }else{
+                    $scope.mailboxAll = response.data.obj;
+                    $scope.items_per_page = 10; // 每页显示的条数
+                    $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                    $scope.totalItems = response.data.sumcount; // 总条数
+                    $scope.currentPage = 1; // 指定当前页码为第一页
+                    $scope.pageChanged = function(activePage) {
+                        $http.get("http://api.jgsoft.org/wcommunity/api/mailbox/getMyMailBox?uid="+$scope.logID+"&type="+$scope.Type+"&skip="+activePage+"&limit=10&keyWord=").then(function(response) {
+                            if (response.data.code !== "200") {
+                                alert("请求信箱列表发生错误、请联系后台管理员！");
+                            } else {
+                                $scope.mailboxAll = response.data.obj;
+                            }
+                        }, function() {
+                            alert("对不起、信箱列表获取失败、请重新获取！");
+                        });
+                    };
+                }
+            }
+        },function(){
+            alert("对不起、当前网络较慢、请重新获取信箱列表！");
+        });
+        /*单条邀请信息查询编辑*/
+        $scope.editUser=function(userid){
+            $http.get("http://api.jgsoft.org/wcommunity/api/mailbox/getMyMailBoxById?id="+userid).then(function(response){
+                if(response.data.code !== "200"){
+                    alert("获取单条管理员邀请信息发生错误、请联系后台管理员！");
+                }else{
+                    $scope.singUserData=response.data.obj;
+                    $scope.shUser=function(shId){
+                        var shUserData={"id":userid,"state":shId};
+                        $.ajax({
+                            type:"POST",
+                            url:"http://api.jgsoft.org/wcommunity/api/mailbox/updateMailBox",
+                            data:shUserData,
+                            success:function(response){
+                                if(response.code !== "200"){
+                                    alert("提交管理员审核信息发生错误、请联系后台管理员!");
+                                } else {
+                                    alert("管理员审核提交成功！");
+                                    window.location.reload();  
+                                }
+                            },
+                            error:function(){
+                                alert("对不起、当前网速较慢、请重新提交管理员审核信息！");
+                            }
+                        });
+                    }
+                }
+            },function(){
+                alert("对不起、当前网速较慢、请重新获取该条邀请详情！");
+            });
+        };
+        /*受邀请的管理员搜索*/
+        $scope.search=function($event){
+            if($event.keyCode==13){
+                $scope.keywords = angular.element($event.target).val();
+            $http.get("http://api.jgsoft.org/wcommunity/api/mailbox/getMyMailBox?uid="+$scope.logID+"&type="+$scope.Type+"&skip=1&limit=10&keyWord="+$scope.keywords).then(function(response) {
+                if (response.data.code !== "200") {
+                    alert("获取信箱列表发生错误、请联系后台管理员！");
+                } else {
+                    if (response.data.obj == "") {
+                        $scope.mailboxAll = response.data.obj;
+                        alert("对不起、未查询到受邀管理员信息！");
+                        $scope.items_per_page = 10; // 每页显示的条数
+                        $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                        $scope.totalItems = 0; // 总条数
+                        $scope.currentPage = 1; // 指定当前页码为第一页
+                    } else {
+                        $scope.mailboxAll = response.data.obj;
+                        $scope.items_per_page = 10; // 每页显示的条数
+                        $scope.maxSize = 10; // 限制分页按钮显示的数量大小为10个按钮  
+                        $scope.totalItems = response.data.sumcount; // 总条数
+                        $scope.currentPage = 1; // 指定当前页码为第一页
+                        $scope.pageChanged = function(activePage) {
+                            $http.get("http://api.jgsoft.org/wcommunity/api/mailbox/getMyMailBox?uid="+$scope.logID+"&type="+$scope.Type+"&skip=1&limit=10&keyWord="+$scope.keywords).then(function(response) {
+                                if (response.data.code !== "200") {
+                                    alert("获取信箱列表发生错误、请联系后台管理员！");
+                                } else {
+                                    $scope.mailboxAll = response.data.obj;
+                                }
+                            }, function() {
+                                alert("对不起、当前网络较慢、请重新获取搜索的信箱列表！");
+                            });
+                        };
+                    };
+                }
+            },function(){
+                alert("对不起、当前网络较慢、请重新获取搜索的信箱列表！");
+            });
+            };
+        };
+
+    });
+};
+</script>

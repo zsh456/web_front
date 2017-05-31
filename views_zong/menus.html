@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>智慧社区菜单管理</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区菜单管理">
+    <meta name="keyword" content="智慧社区菜单管理">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/jquery.treegrid.css">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <link href="css/total_ymm.css" rel="stylesheet">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script src="js/views/total_ymm.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="./js/views/totalAngular.js"></script>
+    <script type="text/javascript" src="./js/views/jquery.treegrid.js"></script>
+    <script type="text/javascript" src="./js/views/jquery.treegrid.bootstrap3.js"></script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" ng-app="project_app" ng-controller="street_user" ng-cloak>
+    <!-- 引入公共header部分 -->
+    <div ng-include="'header.html'"></div>
+    <div class="app-body">
+        <!-- 引入公共sideBar区域开始 -->
+        <div ng-include="'sideBar.html'"></div>
+        <!-- Main content -->
+        <main class="main">
+            <div class="container-fluid self_container_padding">
+                <div class="animated">
+                    <div class="row">
+                        <div class="col-md-12 mb-2">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active topTab" data-toggle="tab" href="#home" role="tab" aria-controls="home" id="0" name="total" ng-click="changeActive($event)">总管理员</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link topTab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" id="1" ng-click="changeActive($event)">街道管理员</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link topTab" data-toggle="tab" href="#company" role="tab" aria-controls="profile" id="2" ng-click="changeActive($event)">商家</a>
+                                </li>
+                                <li class="last-btn">
+                                    <button class="btn btn-primary btn-md pull-right user_add_btn" data-toggle="modal" data-target="#menus_add">
+                                        新增
+                                    </button>
+                                </li>
+                                <div class="modal fade show" id="menus_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog street_edit">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="">新增</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                    ×
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form enctype="multipart/form-data" class="form-horizontal">
+                                                    <div class="form-group row">
+                                                        <label class="col-md-2">类型</label>
+                                                        <select name="" id="" class="col-md-2" ng-model="type_selected" ng-options="x.id as x.name for x  in types">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group row" ng-hide="type_selected=='0'">
+                                                        <label class="col-md-2">父级</label>
+                                                        <select name="" id="" class="col-md-2" ng-model="parent" ng-options="x.id as x.name for x in active_data">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-2">同级内排序</label>
+                                                        <input type="number" min="1" class="form-control col-md-2" ng-model="menuSort">
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-2">菜单名称</label>
+                                                        <input type="text" class="form-control col-md-7" ng-model="menuName">
+                                                    </div>
+                                                    <div class="form-group row" ng-hide="type_selected=='0'">
+                                                        <label class="col-md-2">url</label>
+                                                        <input type="text" class="form-control col-md-7" ng-model="menuPath">
+                                                    </div>
+                                                    <div class="form-group row ">
+                                                        <label class="col-md-2">是否启用</label>
+                                                        <div class="col-md-7">
+                                                            <label class="switch switch-3d switch-primary">
+                                                                <input type="checkbox" class="switch-input" checked ng-init="isEnable='0'" ng-model="isEnable" ng-false-value="0" ng-true-value="1">
+                                                                <span class="switch-label"></span>
+                                                                <span class="switch-handle"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="pull-right">
+                                                    <button type="button" class="btn btn-primary btn-success" ng-click="add_menu();">
+                                                        保存
+                                                    </button>
+                                                    <button type="reset" class="btn btn-default" data-dismiss="modal">关闭
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                </div>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- 总管理员管理 -->
+                                <div class="tab-pane active edit_tab padding-top-none" id="home" role="tabpanel">
+                                    <div class="col-lg-12 edit_col-lg-12">
+                                        <div class="card">
+                                            <div class="card-block padding-top-none">
+                                                <table class="table tree">
+                                                    <thead class="public_borderBottom">
+                                                        <tr>
+                                                            <!-- <th></th> -->
+                                                            <th class="first_th">菜单名称</th>
+                                                            <th>父级</th>
+                                                            <th>URL</th>
+                                                            <th>状态</th>
+                                                            <th>操作</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="public_tbody_border totalContainer">
+                                                        <!-- 总管理员父级 -->
+                                                        <div class="modal fade show" id="menus_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                            <div class="modal-dialog street_edit">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="">编辑</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                            ×
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">类型</label>
+                                                                                <select name="" id="" class="col-md-2 selects_input" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group row tits_input" ng-hide="type_default=='0'">
+                                                                                <label class="col-md-2">父级</label>
+                                                                                <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">同级内排序</label>
+                                                                                <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">菜单名称</label>
+                                                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                                                                            </div>
+                                                                            <div class="form-group row tits_input" ng-hide="type_default=='0'">
+                                                                                <label class="col-md-2">url</label>
+                                                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                                                                            </div>
+                                                                            <div class="form-group row ">
+                                                                                <label class="col-md-2">是否启用</label>
+                                                                                <div class="col-md-7">
+                                                                                    <label class="switch switch-3d switch-primary">
+                                                                                        <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                                                                        <span class="switch-label"></span>
+                                                                                        <span class="switch-handle"></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <div class="input-group col-md-4 street_form_btn_left">
+                                                                            <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                                                                            <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                                                                                保存
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.modal-content -->
+                                                            </div>
+                                                        </div>
+                                                        <!-- 总管理员子级 -->
+                                                        <div class="modal fade show" id="menus_sons_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                            <div class="modal-dialog street_edit">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="">编辑</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                            ×
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">类型</label>
+                                                                                <select name="" id="" class="col-md-2 selects_inputs" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group row tits_inputs" ng-hide="type_default=='0'">
+                                                                                <label class="col-md-2">父级</label>
+                                                                                <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">同级内排序</label>
+                                                                                <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">菜单名称</label>
+                                                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                                                                            </div>
+                                                                            <div class="form-group row tits_inputs" ng-hide="type_default=='0'">
+                                                                                <label class="col-md-2">url</label>
+                                                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                                                                            </div>
+                                                                            <div class="form-group row ">
+                                                                                <label class="col-md-2">是否启用</label>
+                                                                                <div class="col-md-7">
+                                                                                    <label class="switch switch-3d switch-primary">
+                                                                                        <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                                                                        <span class="switch-label"></span>
+                                                                                        <span class="switch-handle"></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <div class="input-group col-md-4 street_form_btn_left">
+                                                                            <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                                                                            <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                                                                                保存
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.modal-content -->
+                                                            </div>
+                                                        </div>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 街道管理员管理 -->
+                                <div class="tab-pane edit_tab padding-top-none" id="profile" role="tabpanel">
+                                    <div class="col-lg-12 edit_col-lg-12">
+                                        <div class="card">
+                                            <div class="card-block padding-top-none">
+                                                <table class="table streeTree">
+                                                    <thead class="public_borderBottom">
+                                                        <tr>
+                                                            <th class="first_th">菜单名称</th>
+                                                            <th>父级</th>
+                                                            <th>URL</th>
+                                                            <th>状态</th>
+                                                            <th>操作</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="public_tbody_border">
+                                                        <!-- 街道管理员父级 -->
+                                                        <div class="modal fade show" id="menus_street_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                            <div class="modal-dialog street_edit">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="">编辑</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                            ×
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">类型</label>
+                                                                                <select name="" id="" class="col-md-2 selec_input" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group row ti_input" ng-hide="type_default=='0'">
+                                                                                <label class="col-md-2">父级</label>
+                                                                                <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">同级内排序</label>
+                                                                                <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">菜单名称</label>
+                                                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                                                                            </div>
+                                                                            <div class="form-group row ti_input" ng-hide="type_default=='0'">
+                                                                                <label class="col-md-2">url</label>
+                                                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                                                                            </div>
+                                                                            <div class="form-group row ">
+                                                                                <label class="col-md-2">是否启用</label>
+                                                                                <div class="col-md-7">
+                                                                                    <label class="switch switch-3d switch-primary">
+                                                                                        <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                                                                        <span class="switch-label"></span>
+                                                                                        <span class="switch-handle"></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <div class="input-group col-md-4 street_form_btn_left">
+                                                                            <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                                                                            <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                                                                                保存
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.modal-content -->
+                                                            </div>
+                                                        </div>
+                                                        <!--  街道管理员子级 -->
+                                                        <div class="modal fade show" id="menus_sons_street_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                            <div class="modal-dialog street_edit">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="">编辑</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                            ×
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">类型</label>
+                                                                                <select name="" id="" class="col-md-2 sel_input" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group row _input" ng-hide="type_default=='0'">
+                                                                                <label class="col-md-2">父级</label>
+                                                                                <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">同级内排序</label>
+                                                                                <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label class="col-md-2">菜单名称</label>
+                                                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                                                                            </div>
+                                                                            <div class="form-group row _input" ng-hide="type_default=='0'">
+                                                                                <label class="col-md-2">url</label>
+                                                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                                                                            </div>
+                                                                            <div class="form-group row ">
+                                                                                <label class="col-md-2">是否启用</label>
+                                                                                <div class="col-md-7">
+                                                                                    <label class="switch switch-3d switch-primary">
+                                                                                        <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                                                                        <span class="switch-label"></span>
+                                                                                        <span class="switch-handle"></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <div class="input-group col-md-4 street_form_btn_left">
+                                                                            <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                                                                            <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                                                                                保存
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.modal-content -->
+                                                            </div>
+                                                        </div>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+<!-- 商家管理 -->
+<div class="tab-pane edit_tab padding-top-none" id="company" role="tabpanel">
+    <div class="col-lg-12 edit_col-lg-12">
+        <div class="card">
+            <div class="card-block padding-top-none">
+                <table class="table shopTree">
+                    <thead class="public_borderBottom">
+                        <tr>
+                            <th class="first_th">菜单名称</th>
+                            <th>父级</th>
+                            <th>URL</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="public_tbody_border">
+                        <!-- 商家父级 -->
+                        <div class="modal fade show" id="menus_shop_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog street_edit">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="">编辑</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            ×
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                            <div class="form-group row">
+                                                <label class="col-md-2">类型</label>
+                                                <select name="" id="" class="col-md-2 selec_input" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                                                </select>
+                                            </div>
+                                            <div class="form-group row ti_input" ng-hide="type_default=='0'">
+                                                <label class="col-md-2">父级</label>
+                                                <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                                                </select>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-2">同级内排序</label>
+                                                <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-2">菜单名称</label>
+                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                                            </div>
+                                            <div class="form-group row ti_input" ng-hide="type_default=='0'">
+                                                <label class="col-md-2">url</label>
+                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                                            </div>
+                                            <div class="form-group row ">
+                                                <label class="col-md-2">是否启用</label>
+                                                <div class="col-md-7">
+                                                    <label class="switch switch-3d switch-primary">
+                                                        <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                                        <span class="switch-label"></span>
+                                                        <span class="switch-handle"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="input-group col-md-4 street_form_btn_left">
+                                            <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                                            <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                                                保存
+                                            </button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                        </div>
+                        <!--  商家子级 -->
+                        <div class="modal fade show" id="menus_sons_shop_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog street_edit">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="">编辑</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            ×
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                            <div class="form-group row">
+                                                <label class="col-md-2">类型</label>
+                                                <select name="" id="" class="col-md-2 sel_input" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                                                </select>
+                                            </div>
+                                            <div class="form-group row _input" ng-hide="type_default=='0'">
+                                                <label class="col-md-2">父级</label>
+                                                <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                                                </select>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-2">同级内排序</label>
+                                                <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-2">菜单名称</label>
+                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                                            </div>
+                                            <div class="form-group row _input" ng-hide="type_default=='0'">
+                                                <label class="col-md-2">url</label>
+                                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                                            </div>
+                                            <div class="form-group row ">
+                                                <label class="col-md-2">是否启用</label>
+                                                <div class="col-md-7">
+                                                    <label class="switch switch-3d switch-primary">
+                                                        <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                                        <span class="switch-label"></span>
+                                                        <span class="switch-handle"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="input-group col-md-4 street_form_btn_left">
+                                            <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                                            <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                                                保存
+                                            </button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                        </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+httpBaseUrl = "http://Dev.jgsoft.org";
+var loginKey = JSON.parse(window.sessionStorage.getItem("userData"));
+var app = angular.module("project_app", ['ui.bootstrap']);
+if (loginKey == null) {
+    alert("请先登录！");
+    window.location.href = "./index.html";
+} else {
+    app.controller("street_user", function($scope, $http, $rootScope, $location) {
+        // 取得用户登录的帐号相关信息
+        $scope.userLoginUserData = JSON.parse(window.sessionStorage.getItem("userData"));
+        /*选择类型自定义数组*/
+        $scope.types = [{
+            "id": "0",
+            "name": "标题"
+        }, {
+            "id": "1",
+            "name": "功能"
+        }];
+        // 设定新增typeid的默认值
+        $scope.type_selected = $scope.types['0']['id'];
+        /*监听当前页面为总管理还是街道管理*/
+        /*给当前页面一个默认值*/
+        $scope.changeActive = function($event) {
+            var aLink = angular.element($event.target).text();
+            if (aLink == '总管理员') {
+                $scope.active_data = $scope.total_parents;
+                // 设定父级id默认值
+                $scope.parent = $scope.total_parents['0']['id'];
+                $scope.menuType = "0";
+            } else if (aLink == '街道管理员') {
+                $scope.active_data = $scope.street_parents;
+                // 设定父级id默认值
+                if ($scope.active_data == "") {
+                    $scope.parent = 0;
+                } else if ($scope.active_data !== "") {
+                    $scope.parent = $scope.street_parents['0']['id'];
+                };
+                $scope.menuType = "1";
+            }else if(aLink == '商家'){
+                $scope.active_data = $scope.shop_parents;
+                // 设定父级id默认值
+                if ($scope.active_data == "") {
+                    $scope.parent = 0;
+                } else if ($scope.active_data !== "") {
+                    $scope.parent = $scope.shop_parents['0']['id'];
+                };
+                $scope.menuType = "2";
+            };
+        };
+        /*新增管理员菜单*/
+        $scope.add_menu = function() {
+            var addMeunData = {
+                "id": "0",
+                "parentId": $scope.type_selected == '0' ? $scope.parent = "0" : $scope.parent,
+                "name": $scope.menuName,
+                "sort": $scope.menuSort,
+                "type": $scope.type_selected,
+                "path": $scope.type_selected == '0' ? $scope.menuPath = "" : $scope.menuPath,
+                "isEnable": $scope.isEnable,
+                "menuType": $scope.menuType
+            };
+            if ($scope.menuSort == undefined) {
+                alert("请手动排序！");
+            } else if ($scope.menuName == undefined) {
+                alert("请输入菜单名称！");
+            }
+            /*else if ($scope.menuPath == undefined) {
+                               alert("请输入url地址！");
+                           }*/
+            else {
+                $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", addMeunData).then(function(response) {
+                    if (response.data.code !== 200) {
+                        alert(response.data.msg);
+                    } else if (response.data.code == 200) {
+                        alert("恭喜你、成功添加菜单！");
+                        window.location.reload();
+                        // console.log(addMeunData);
+                    }
+                }, function() {
+                    alert("对不起，请重新添加菜单！");
+                });
+            };
+        };
+        /*获取总管理员菜单列表*/
+        $http.get(httpBaseUrl + "/api/MenuServer/GetTreeList?adminType=total&pos=1&pagesize=10&keyword=").then(function(response) {
+            if (response.data.code !== 200) {
+                alert(response.data.msg);
+            } else if (response.data.code == 200) {
+                if (response.data.obj == "") {
+                    alert("当前无菜单、请添加！");
+                } else if (response.data.obj !== "") {
+                    $scope.total_parents = response.data.obj;
+                    $scope.active_data = response.data.obj;
+                    // 设定父级id默认值以及菜单类型
+                    $scope.parent = $scope.total_parents['0']['id'];
+                    $scope.menuType = "0";
+                    // {{street_sons.isEnable=='0' ? '禁用' : '启用'}}
+                    for (var i = 0; i < $scope.total_parents.length; i++) {
+                        if ($scope.total_parents[i]['parentId'] == "") {
+                            $("<tr>" + "<td>" + $scope.total_parents[i]['name'] + "</td>" + "<td>" + $scope.total_parents[i]['parentName'] + "</td>" + "<td>" + $scope.total_parents[i]['path'] + "</td>" + "<td>" + ($scope.total_parents[i]['isEnable'] == 0 ? '禁用' : '启用') + "</td>" + "<td class='hidden-md-down'>" + "<button class='btn btn-primary btn-sm totalParBut' data-toggle='modal' data-target='#menus_edit'>" + "<i class='fa fa-edit'>" + "</i>" + "</button>" + "</td>" + "</tr>").addClass("treegrid-" + $scope.total_parents[i]['id']).attr('id', $scope.total_parents[i]['id']).appendTo($('.tree tbody.totalContainer'));
+                        } else {
+                            $("<tr>" + "<td>" + $scope.total_parents[i]['name'] + "</td>" + "<td>" + $scope.total_parents[i]['parentName'] + "</td>" + "<td>" + $scope.total_parents[i]['path'] + "</td>" + "<td>" + ($scope.total_parents[i]['isEnable'] == 0 ? '禁用' : '启用') + "</td>" + "<td class='hidden-md-down'>" + "<button class='btn btn-primary btn-sm totalSonsBut' data-toggle='modal' data-target='#menus_sons_edit'>" + "<i class='fa fa-edit'>" + "</i>" + "</button>" + "</td>" + "</tr>").addClass("treegrid-" + $scope.total_parents[i]['id']).addClass("treegrid-parent-" + $scope.total_parents[i]['parentId']).attr('id', $scope.total_parents[i]['id']).appendTo($('.tree tbody.totalContainer'));
+                        }
+                    };
+                    $('.tree').treegrid({
+                        expanderExpandedClass: 'glyphicons glyphicons-minus',
+                        expanderCollapsedClass: 'glyphicons glyphicons-plus',
+                        'initialState': 'collapsed' //默认不显示所有子节点
+                    });
+                    /*总管理员父级编辑*/
+                    $("button.totalParBut").on('click', function() {
+                        $scope.totlParId = $(this).parents('tr').attr('id');
+                        /*编辑管理员*/
+                        $http.get(httpBaseUrl + "/api/MenuServer/getsingle?id=" + $scope.totlParId).then(function(response) {
+                            $scope.editMenuData = response.data.obj;
+                            $scope.type_default = JSON.stringify(response.data.obj.type);
+                            $scope.par_default = response.data.obj.parentId;
+                            console.log($scope.par_default);
+                            // 根据查询的isEnable的值呈现不同的页面开关样式
+                            $scope.changeMenuIsenableSwitch = function() {
+                                var _this = $("input.MenuisEnable" + $scope.totlParId);
+                                if ($scope.editMenuData.isEnable == '1') {
+                                    _this.prop('checked', true);
+                                } else if ($scope.editMenuData.isEnable == '0') {
+                                    _this.prop('checked', false);
+                                };
+                            };
+                            // 提交编辑的菜单信息   
+                            $scope.editMenuSubmit = function() {
+                                var editMeunData = {
+                                    "id": $scope.editMenuData.id,
+                                    "parentId": $scope.type_default == '0' ? "0" : $scope.par_default,
+                                    "name": $scope.editMenuData.name,
+                                    "sort": $scope.editMenuData.sort,
+                                    "type": $scope.type_default,
+                                    "path": $scope.type_default == '0' ? "" : $scope.editMenuData.path,
+                                    "isEnable": $scope.editMenuData.isEnable,
+                                    "menuType": $scope.editMenuData.menuType
+                                };
+                                // console.log(editMeunData);
+                                if ($scope.type_default == '0') {
+                                    if ($scope.editMenuData.name == "") {
+                                        alert("请填写菜单名称！");
+                                    } else if ($scope.editMenuData.sort == undefined) {
+                                        alert("请手动排序！");
+                                    } else {
+                                        $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                            if (response.data.code !== 200) {
+                                                alert(response.data.msg);
+                                            } else if (response.data.code == 200) {
+                                                alert("恭喜你、成功编辑菜单！");
+                                                window.location.reload();
+                                            }
+                                        }, function() {
+                                            alert("对不起，请重新编辑菜单！");
+                                        });
+                                    };
+                                } else if ($scope.type_default == '1') {
+                                    if ($scope.par_default == '0') {
+                                        alert("请选择父级！");
+                                    } else if ($scope.editMenuData.sort == undefined) {
+                                        alert("请手动排序！");
+                                    } else if ($scope.editMenuData.name == "") {
+                                        alert("请填写菜单名称！");
+                                    }
+                                    /*else if ($scope.editMenuData.path == "") {
+                                                                               alert("请填写url地址!");
+                                                                           } */
+                                    else {
+                                        $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                            if (response.data.code !== 200) {
+                                                alert(response.data.msg);
+                                            } else if (response.data.code == 200) {
+                                                alert("恭喜你、成功编辑菜单！");
+                                                window.location.reload();
+                                                // console.log(editMeunData);
+                                            }
+                                        }, function() {
+                                            alert("对不起，请重新编辑菜单！");
+                                        });
+                                    };
+                                };
+                            };
+                        }, function() {
+                            alert("对不起、当前网速较慢、请耐心等待当前街道的详细信息！");
+                        });
+                        /*删除管理员*/
+                        $scope.delete_menu = function($event) {
+                            $scope.confirm_del = angular.element($event.target).prev('input').val();
+                            if ($scope.confirm_del === '确认删除') {
+                                $http.get(httpBaseUrl + "/api/menuserver/removermenuserver?id=" + $scope.totlParId).then(function(response) {
+                                    if (response.data.code !== 200) {
+                                        alert(response.data.msg);
+                                    } else if (response.data.code == 200) {
+                                        alert("恭喜你、删除成功！");
+                                        $("tr#" + $scope.totlParId).remove();
+                                        window.location.reload();
+                                    }
+                                }, function() {
+                                    alert("对不起、请重新删除数据！")
+                                });
+                            } else if ($scope.confirm_del === '') {
+                                alert("请输入左侧框中的文字！");
+                            } else if ($scope.confirm_del !== '确认删除') {
+                                alert("请正确输入左侧框中的文字！");
+                            }
+                        };
+                    });
+                    /*总管理员子级编辑*/
+                    $("button.totalSonsBut").on('click', function() {
+                        $scope.totlParSonsId = $(this).parents('tr').attr('id');
+                        /*编辑管理员*/
+                        $http.get(httpBaseUrl + "/api/MenuServer/getsingle?id=" + $scope.totlParSonsId).then(function(response) {
+                            $scope.editMenuData = response.data.obj;
+                            $scope.type_default = JSON.stringify(response.data.obj.type);
+                            $scope.par_default = response.data.obj.parentId;
+                            console.log($scope.par_default);
+                            // 根据查询的isEnable的值呈现不同的页面开关样式
+                            $scope.changeMenuIsenableSwitch = function() {
+                                var _this = $("input.MenuisEnable" + $scope.totlParSonsId);
+                                if ($scope.editMenuData.isEnable == '1') {
+                                    _this.prop('checked', true);
+                                } else if ($scope.editMenuData.isEnable == '0') {
+                                    _this.prop('checked', false);
+                                };
+                            };
+                            // 提交编辑的菜单信息   
+                            $scope.editMenuSubmit = function() {
+                                var editMeunData = {
+                                    "id": $scope.editMenuData.id,
+                                    "parentId": $scope.type_default == '0' ? "0" : $scope.par_default,
+                                    "name": $scope.editMenuData.name,
+                                    "sort": $scope.editMenuData.sort,
+                                    "type": $scope.type_default,
+                                    "path": $scope.type_default == '0' ? "" : $scope.editMenuData.path,
+                                    "isEnable": $scope.editMenuData.isEnable,
+                                    "menuType": $scope.editMenuData.menuType
+                                };
+                                console.log(editMeunData);
+                                if ($scope.type_default == '0') {
+                                    if ($scope.editMenuData.name == "") {
+                                        alert("请填写菜单名称！");
+                                    } else if ($scope.editMenuData.sort == undefined) {
+                                        alert("请手动排序！");
+                                    } else {
+                                        $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                            if (response.data.code !== 200) {
+                                                alert(response.data.msg);
+                                            } else if (response.data.code == 200) {
+                                                alert("恭喜你、成功编辑菜单！");
+                                                window.location.reload();
+                                            }
+                                        }, function() {
+                                            alert("对不起，请重新编辑菜单！");
+                                        });
+                                    };
+                                } else if ($scope.type_default == '1') {
+                                    if ($scope.par_default == '0') {
+                                        alert("请选择父级！");
+                                    } else if ($scope.editMenuData.sort == undefined) {
+                                        alert("请手动排序！");
+                                    } else if ($scope.editMenuData.name == "") {
+                                        alert("请填写菜单名称！");
+                                    }
+                                    /*else if ($scope.editMenuData.path == "") {
+                                                                               alert("请填写url地址!");
+                                                                           } */
+                                    else {
+                                        $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                            if (response.data.code !== 200) {
+                                                alert(response.data.msg);
+                                            } else if (response.data.code == 200) {
+                                                alert("恭喜你、成功编辑菜单！");
+                                                window.location.reload();
+                                                // console.log(editMeunData);
+                                            }
+                                        }, function() {
+                                            alert("对不起，请重新编辑菜单！");
+                                        });
+                                    };
+                                };
+
+                            };
+                        }, function() {
+                            alert("对不起、当前网速较慢、请耐心等待当前街道的详细信息！");
+                        });
+                        /*删除管理员*/
+                        $scope.delete_menu = function($event) {
+                            $scope.confirm_del = angular.element($event.target).prev('input').val();
+                            if ($scope.confirm_del === '确认删除') {
+                                $http.get(httpBaseUrl + "/api/menuserver/removermenuserver?id=" + $scope.totlParSonsId).then(function(response) {
+                                    if (response.data.code !== 200) {
+                                        alert(response.data.msg);
+                                    } else if (response.data.code == 200) {
+                                        alert("恭喜你、删除成功！");
+                                        $("tr#" + $scope.totlParSonsId).remove();
+                                        window.location.reload();
+                                    }
+                                }, function() {
+                                    alert("对不起、请重新删除数据！")
+                                });
+                            } else if ($scope.confirm_del === '') {
+                                alert("请输入左侧框中的文字！");
+                            } else if ($scope.confirm_del !== '确认删除') {
+                                alert("请正确输入左侧框中的文字！");
+                            }
+                        };
+                    });
+                };
+            }
+        }, function() {
+            alert("对不起、当前网速较慢、请重新获取总管理员列表！");
+        });
+        /*获取街道管理员列表*/
+        $http.get(httpBaseUrl + "/api/MenuServer/GetTreeList?adminType=street&pos=1&pagesize=10&keyword=").then(function(response) {
+            if (response.data.code !== 200) {
+                alert(response.data.msg);
+            } else if (response.data.code == 200) {
+                $scope.street_parents = response.data.obj;
+                for (var i = 0; i < $scope.street_parents.length; i++) {
+                    if ($scope.street_parents[i]['parentId'] == "") {
+                        $("<tr>" + "<td>" + $scope.street_parents[i]['name'] + "</td>" + "<td>" + $scope.street_parents[i]['parentName'] + "</td>" + "<td>" + $scope.street_parents[i]['path'] + "</td>" + "<td>" + ($scope.street_parents[i]['isEnable'] == 0 ? '禁用' : '启用') + "</td>" + "<td class='hidden-md-down'>" + "<button class='btn btn-primary btn-sm streetParBut' data-toggle='modal' data-target='#menus_street_edit'>" + "<i class='fa fa-edit'>" + "</i>" + "</button>" + "</td>" + "</tr>").addClass("treegrid-" + $scope.street_parents[i]['id']).attr('id', $scope.street_parents[i]['id']).appendTo($('.streeTree tbody'));
+                    } else {
+                        $("<tr>" + "<td>" + $scope.street_parents[i]['name'] + "</td>" + "<td>" + $scope.street_parents[i]['parentName'] + "</td>" + "<td>" + $scope.street_parents[i]['path'] + "</td>" + "<td>" + ($scope.street_parents[i]['isEnable'] == 0 ? '禁用' : '启用') + "</td>" + "<td class='hidden-md-down'>" + "<button class='btn btn-primary btn-sm streetSonsBut' data-toggle='modal' data-target='#menus_sons_street_edit'>" + "<i class='fa fa-edit'>" + "</i>" + "</button>" + "</td>" + "</tr>").addClass("treegrid-" + $scope.street_parents[i]['id']).addClass("treegrid-parent-" + $scope.street_parents[i]['parentId']).attr('id', $scope.street_parents[i]['id']).appendTo($('.streeTree tbody'));
+                    }
+                };
+                $('.streeTree').treegrid({
+                    expanderExpandedClass: 'glyphicons glyphicons-minus',
+                    expanderCollapsedClass: 'glyphicons glyphicons-plus',
+                    'initialState': 'collapsed' //默认不显示所有子节点
+                });
+                /*街道父级管理员编辑*/
+                $("button.streetParBut").on('click', function() {
+                    $scope.streetParSonsId = $(this).parents('tr').attr('id');
+                    /*编辑管理员*/
+                    $http.get(httpBaseUrl + "/api/MenuServer/getsingle?id=" + $scope.streetParSonsId).then(function(response) {
+                        $scope.editMenuData = response.data.obj;
+                        $scope.type_default = JSON.stringify(response.data.obj.type);
+                        $scope.par_default = response.data.obj.parentId;
+                        console.log($scope.par_default);
+                        // 根据查询的isEnable的值呈现不同的页面开关样式
+                        $scope.changeMenuIsenableSwitch = function() {
+                            var _this = $("input.MenuisEnable" + $scope.streetParSonsId);
+                            if ($scope.editMenuData.isEnable == '1') {
+                                _this.prop('checked', true);
+                            } else if ($scope.editMenuData.isEnable == '0') {
+                                _this.prop('checked', false);
+                            };
+                        };
+                        // 提交编辑的菜单信息   
+                        $scope.editMenuSubmit = function() {
+                            var editMeunData = {
+                                "id": $scope.editMenuData.id,
+                                "parentId": $scope.type_default == '0' ? "0" : $scope.par_default,
+                                "name": $scope.editMenuData.name,
+                                "sort": $scope.editMenuData.sort,
+                                "type": $scope.type_default,
+                                "path": $scope.type_default == '0' ? "" : $scope.editMenuData.path,
+                                "isEnable": $scope.editMenuData.isEnable,
+                                "menuType": $scope.editMenuData.menuType
+                            };
+                            // console.log(editMeunData);
+                            if ($scope.type_default == '0') {
+                                if ($scope.editMenuData.name == "") {
+                                    alert("请填写菜单名称！");
+                                } else if ($scope.editMenuData.sort == undefined) {
+                                    alert("请手动排序！");
+                                } else {
+                                    $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                        if (response.data.code !== 200) {
+                                            alert(response.data.msg);
+                                        } else if (response.data.code == 200) {
+                                            alert("恭喜你、成功编辑菜单！");
+                                            window.location.reload();
+                                        }
+                                    }, function() {
+                                        alert("对不起，请重新编辑菜单！");
+                                    });
+                                };
+                            } else if ($scope.type_default == '1') {
+                                if ($scope.par_default == '0') {
+                                    alert("请选择父级！");
+                                } else if ($scope.editMenuData.sort == undefined) {
+                                    alert("请手动排序！");
+                                } else if ($scope.editMenuData.name == "") {
+                                    alert("请填写菜单名称！");
+                                }
+                                /*else if ($scope.editMenuData.path == "") {
+                                    alert("请填写url地址!");
+                                } */
+                                else {
+                                    $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                        if (response.data.code !== 200) {
+                                            alert(response.data.msg);
+                                        } else if (response.data.code == 200) {
+                                            alert("恭喜你、成功编辑菜单！");
+                                            window.location.reload();
+                                            // console.log(editMeunData);
+                                        }
+                                    }, function() {
+                                        alert("对不起，请重新编辑菜单！");
+                                    });
+                                };
+                            };
+                        };
+
+                    }, function() {
+                        alert("对不起、当前网速较慢、请耐心等待当前街道的详细信息！");
+                    });
+
+                    /*删除*/
+                    $scope.delete_menu = function($event) {
+                        $scope.confirm_del = angular.element($event.target).prev('input').val();
+                        if ($scope.confirm_del === '确认删除') {
+                            $http.get(httpBaseUrl + "/api/menuserver/removermenuserver?id=" + $scope.streetParSonsId).then(function(response) {
+                                if (response.data.code !== 200) {
+                                    alert(response.data.msg);
+                                } else if (response.data.code == 200) {
+                                    alert("恭喜你、删除成功！");
+                                    $("tr#" + $scope.streetParSonsId).remove();
+                                    window.location.reload();
+                                }
+                            }, function() {
+                                alert("对不起、请重新删除数据！")
+                            });
+                        } else if ($scope.confirm_del === '') {
+                            alert("请输入左侧框中的文字！");
+                        } else if ($scope.confirm_del !== '确认删除') {
+                            alert("请正确输入左侧框中的文字！");
+                        }
+                    };
+                });
+                /*街道子级管理员编辑*/
+                $("button.streetSonsBut").on('click', function() {
+                    $scope.streetSonsId = $(this).parents('tr').attr('id');
+                    /*编辑管理员*/
+                    $http.get(httpBaseUrl + "/api/MenuServer/getsingle?id=" + $scope.streetSonsId).then(function(response) {
+                        $scope.editMenuData = response.data.obj;
+                        $scope.type_default = JSON.stringify(response.data.obj.type);
+                        $scope.par_default = response.data.obj.parentId;
+                        console.log($scope.par_default);
+                        // 根据查询的isEnable的值呈现不同的页面开关样式
+                        $scope.changeMenuIsenableSwitch = function() {
+                            var _this = $("input.MenuisEnable" + $scope.streetSonsId);
+                            if ($scope.editMenuData.isEnable == '1') {
+                                _this.prop('checked', true);
+                            } else if ($scope.editMenuData.isEnable == '0') {
+                                _this.prop('checked', false);
+                            };
+                        };
+                        // 提交编辑的菜单信息   
+                        $scope.editMenuSubmit = function() {
+                            var editMeunData = {
+                                "id": $scope.editMenuData.id,
+                                "parentId": $scope.type_default == '0' ? "0" : $scope.par_default,
+                                "name": $scope.editMenuData.name,
+                                "sort": $scope.editMenuData.sort,
+                                "type": $scope.type_default,
+                                "path": $scope.type_default == '0' ? "" : $scope.editMenuData.path,
+                                "isEnable": $scope.editMenuData.isEnable,
+                                "menuType": $scope.editMenuData.menuType
+                            };
+
+                            // console.log(editMeunData);
+
+                            if ($scope.type_default == '0') {
+                                if ($scope.editMenuData.name == "") {
+                                    alert("请填写菜单名称！");
+                                } else if ($scope.editMenuData.sort == undefined) {
+                                    alert("请手动排序！");
+                                } else {
+                                    $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                        if (response.data.code !== 200) {
+                                            alert(response.data.msg);
+                                        } else if (response.data.code == 200) {
+                                            alert("恭喜你、成功编辑菜单！");
+                                            window.location.reload();
+                                        }
+                                    }, function() {
+                                        alert("对不起，请重新编辑菜单！");
+                                    });
+                                };
+                            } else if ($scope.type_default == '1') {
+                                if ($scope.par_default == '0') {
+                                    alert("请选择父级！");
+                                } else if ($scope.editMenuData.sort == undefined) {
+                                    alert("请手动排序！");
+                                } else if ($scope.editMenuData.name == "") {
+                                    alert("请填写菜单名称！");
+                                }
+                                /*else if ($scope.editMenuData.path == "") {
+                                                                           alert("请填写url地址!");
+                                                                 } */
+                                else {
+                                    $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                        if (response.data.code !== 200) {
+                                            alert(response.data.msg);
+                                        } else if (response.data.code == 200) {
+                                            alert("恭喜你、成功编辑菜单！");
+                                            window.location.reload();
+                                            // console.log(editMeunData);
+                                        }
+                                    }, function() {
+                                        alert("对不起，请重新编辑菜单！");
+                                    });
+                                };
+                            };
+                        };
+                    }, function() {
+                        alert("对不起、当前网速较慢、请耐心等待当前街道的详细信息！");
+                    });
+                    /*删除*/
+                    $scope.delete_menu = function($event) {
+                        $scope.confirm_del = angular.element($event.target).prev('input').val();
+                        if ($scope.confirm_del === '确认删除') {
+                            $http.get(httpBaseUrl + "/api/menuserver/removermenuserver?id=" + $scope.streetSonsId).then(function(response) {
+                                if (response.data.code !== 200) {
+                                    alert(response.data.msg);
+                                } else if (response.data.code == 200) {
+                                    alert("恭喜你、删除成功！");
+                                    $("tr#" + $scope.streetSonsId).remove();
+                                    window.location.reload();
+                                }
+                            }, function() {
+                                alert("对不起、请重新删除数据！")
+                            });
+                        } else if ($scope.confirm_del === '') {
+                            alert("请输入左侧框中的文字！");
+                        } else if ($scope.confirm_del !== '确认删除') {
+                            alert("请正确输入左侧框中的文字！");
+                        }
+                    };
+                });
+            }
+        }, function() {
+            alert("对不起、当前网速较慢、请重新获取街道管理员列表！");
+        });
+        /*获取商家管理员列表*/
+        $http.get(httpBaseUrl + "/api/MenuServer/GetTreeList?adminType=shop&pos=1&pagesize=10&keyword=").then(function(response) {
+            if (response.data.code !== 200) {
+                alert(response.data.msg);
+            } else if (response.data.code == 200) {
+                $scope.shop_parents = response.data.obj;
+                for (var i = 0; i < $scope.shop_parents.length; i++) {
+                    if ($scope.shop_parents[i]['parentId'] == "") {
+                        $("<tr>" + "<td>" + $scope.shop_parents[i]['name'] + "</td>" + "<td>" + $scope.shop_parents[i]['parentName'] + "</td>" + "<td>" + $scope.shop_parents[i]['path'] + "</td>" + "<td>" + ($scope.shop_parents[i]['isEnable'] == 0 ? '禁用' : '启用') + "</td>" + "<td class='hidden-md-down'>" + "<button class='btn btn-primary btn-sm shopParBut' data-toggle='modal' data-target='#menus_shop_edit'>" + "<i class='fa fa-edit'>" + "</i>" + "</button>" + "</td>" + "</tr>").addClass("treegrid-" + $scope.shop_parents[i]['id']).attr('id', $scope.shop_parents[i]['id']).appendTo($('.shopTree tbody'));
+                    } else {
+                        $("<tr>" + "<td>" + $scope.shop_parents[i]['name'] + "</td>" + "<td>" + $scope.shop_parents[i]['parentName'] + "</td>" + "<td>" + $scope.shop_parents[i]['path'] + "</td>" + "<td>" + ($scope.shop_parents[i]['isEnable'] == 0 ? '禁用' : '启用') + "</td>" + "<td class='hidden-md-down'>" + "<button class='btn btn-primary btn-sm shopSonsBut' data-toggle='modal' data-target='#menus_sons_shop_edit'>" + "<i class='fa fa-edit'>" + "</i>" + "</button>" + "</td>" + "</tr>").addClass("treegrid-" + $scope.shop_parents[i]['id']).addClass("treegrid-parent-" + $scope.shop_parents[i]['parentId']).attr('id', $scope.shop_parents[i]['id']).appendTo($('.shopTree tbody'));
+                    }
+                };
+                $('.shopTree').treegrid({
+                    expanderExpandedClass: 'glyphicons glyphicons-minus',
+                    expanderCollapsedClass: 'glyphicons glyphicons-plus',
+                    'initialState': 'collapsed' //默认不显示所有子节点
+                });
+                /*商家父级编辑*/
+                $("button.shopParBut").on('click', function() {
+                    // shopParSonsId
+                    $scope.shopParSonsId = $(this).parents('tr').attr('id');
+                    /*编辑管理员*/
+                    $http.get(httpBaseUrl + "/api/MenuServer/getsingle?id=" + $scope.shopParSonsId).then(function(response) {
+                        $scope.editMenuData = response.data.obj;
+                        $scope.type_default = JSON.stringify(response.data.obj.type);
+                        $scope.par_default = response.data.obj.parentId;
+                        console.log($scope.par_default);
+                        // 根据查询的isEnable的值呈现不同的页面开关样式
+                        $scope.changeMenuIsenableSwitch = function() {
+                            var _this = $("input.MenuisEnable" + $scope.shopParSonsId);
+                            if ($scope.editMenuData.isEnable == '1') {
+                                _this.prop('checked', true);
+                            } else if ($scope.editMenuData.isEnable == '0') {
+                                _this.prop('checked', false);
+                            };
+                        };
+                        // 提交编辑的菜单信息   
+                        $scope.editMenuSubmit = function() {
+                            var editMeunData = {
+                                "id": $scope.editMenuData.id,
+                                "parentId": $scope.type_default == '0' ? "0" : $scope.par_default,
+                                "name": $scope.editMenuData.name,
+                                "sort": $scope.editMenuData.sort,
+                                "type": $scope.type_default,
+                                "path": $scope.type_default == '0' ? "" : $scope.editMenuData.path,
+                                "isEnable": $scope.editMenuData.isEnable,
+                                "menuType": $scope.editMenuData.menuType
+                            };
+                            // console.log(editMeunData);
+                            if ($scope.type_default == '0') {
+                                if ($scope.editMenuData.name == "") {
+                                    alert("请填写菜单名称！");
+                                } else if ($scope.editMenuData.sort == undefined) {
+                                    alert("请手动排序！");
+                                } else {
+                                    $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                        if (response.data.code !== 200) {
+                                            alert(response.data.msg);
+                                        } else if (response.data.code == 200) {
+                                            alert("恭喜你、成功编辑菜单！");
+                                            window.location.reload();
+                                        }
+                                    }, function() {
+                                        alert("对不起，请重新编辑菜单！");
+                                    });
+                                };
+                            } else if ($scope.type_default == '1') {
+                                if ($scope.par_default == '0') {
+                                    alert("请选择父级！");
+                                } else if ($scope.editMenuData.sort == undefined) {
+                                    alert("请手动排序！");
+                                } else if ($scope.editMenuData.name == "") {
+                                    alert("请填写菜单名称！");
+                                }
+                                /*else if ($scope.editMenuData.path == "") {
+                                    alert("请填写url地址!");
+                                } */
+                                else {
+                                    $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                        if (response.data.code !== 200) {
+                                            alert(response.data.msg);
+                                        } else if (response.data.code == 200) {
+                                            alert("恭喜你、成功编辑菜单！");
+                                            window.location.reload();
+                                            // console.log(editMeunData);
+                                        }
+                                    }, function() {
+                                        alert("对不起，请重新编辑菜单！");
+                                    });
+                                };
+                            };
+                        };
+
+                    }, function() {
+                        alert("对不起、当前网速较慢、请耐心等待当前街道的详细信息！");
+                    });
+
+                    /*删除*/
+                    $scope.delete_menu = function($event) {
+                        $scope.confirm_del = angular.element($event.target).prev('input').val();
+                        if ($scope.confirm_del === '确认删除') {
+                            $http.get(httpBaseUrl + "/api/menuserver/removermenuserver?id=" + $scope.shopParSonsId).then(function(response) {
+                                if (response.data.code !== 200) {
+                                    alert(response.data.msg);
+                                } else if (response.data.code == 200) {
+                                    alert("恭喜你、删除成功！");
+                                    $("tr#" + $scope.shopParSonsId).remove();
+                                    window.location.reload();
+                                }
+                            }, function() {
+                                alert("对不起、请重新删除数据！")
+                            });
+                        } else if ($scope.confirm_del === '') {
+                            alert("请输入左侧框中的文字！");
+                        } else if ($scope.confirm_del !== '确认删除') {
+                            alert("请正确输入左侧框中的文字！");
+                        }
+                    };
+                });
+                /*商家菜单子级编辑*/
+                $("button.shopSonsBut").on('click', function() {
+                    // shopSonsId
+                    $scope.shopSonsId = $(this).parents('tr').attr('id');
+                    /*编辑菜单*/
+                    $http.get(httpBaseUrl + "/api/MenuServer/getsingle?id=" + $scope.shopSonsId).then(function(response) {
+                        $scope.editMenuData = response.data.obj;
+                        $scope.type_default = JSON.stringify(response.data.obj.type);
+                        $scope.par_default = response.data.obj.parentId;
+                        console.log($scope.par_default);
+                        // 根据查询的isEnable的值呈现不同的页面开关样式
+                        $scope.changeMenuIsenableSwitch = function() {
+                            var _this = $("input.MenuisEnable" + $scope.shopSonsId);
+                            if ($scope.editMenuData.isEnable == '1') {
+                                _this.prop('checked', true);
+                            } else if ($scope.editMenuData.isEnable == '0') {
+                                _this.prop('checked', false);
+                            };
+                        };
+                        // 提交编辑的菜单信息   
+                        $scope.editMenuSubmit = function() {
+                            var editMeunData = {
+                                "id": $scope.editMenuData.id,
+                                "parentId": $scope.type_default == '0' ? "0" : $scope.par_default,
+                                "name": $scope.editMenuData.name,
+                                "sort": $scope.editMenuData.sort,
+                                "type": $scope.type_default,
+                                "path": $scope.type_default == '0' ? "" : $scope.editMenuData.path,
+                                "isEnable": $scope.editMenuData.isEnable,
+                                "menuType": $scope.editMenuData.menuType
+                            };
+
+                            // console.log(editMeunData);
+
+                            if ($scope.type_default == '0') {
+                                if ($scope.editMenuData.name == "") {
+                                    alert("请填写菜单名称！");
+                                } else if ($scope.editMenuData.sort == undefined) {
+                                    alert("请手动排序！");
+                                } else {
+                                    $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                        if (response.data.code !== 200) {
+                                            alert(response.data.msg);
+                                        } else if (response.data.code == 200) {
+                                            alert("恭喜你、成功编辑菜单！");
+                                            window.location.reload();
+                                        }
+                                    }, function() {
+                                        alert("对不起，请重新编辑菜单！");
+                                    });
+                                };
+                            } else if ($scope.type_default == '1') {
+                                if ($scope.par_default == '0') {
+                                    alert("请选择父级！");
+                                } else if ($scope.editMenuData.sort == undefined) {
+                                    alert("请手动排序！");
+                                } else if ($scope.editMenuData.name == "") {
+                                    alert("请填写菜单名称！");
+                                }
+                                /*else if ($scope.editMenuData.path == "") {
+                                                                           alert("请填写url地址!");
+                                                                 } */
+                                else {
+                                    $http.post(httpBaseUrl + "/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                                        if (response.data.code !== 200) {
+                                            alert(response.data.msg);
+                                        } else if (response.data.code == 200) {
+                                            alert("恭喜你、成功编辑菜单！");
+                                            window.location.reload();
+                                            // console.log(editMeunData);
+                                        }
+                                    }, function() {
+                                        alert("对不起，请重新编辑菜单！");
+                                    });
+                                };
+                            };
+                        };
+                    }, function() {
+                        alert("对不起、当前网速较慢、请耐心等待当前街道的详细信息！");
+                    });
+                    /*删除*/
+                    $scope.delete_menu = function($event) {
+                        $scope.confirm_del = angular.element($event.target).prev('input').val();
+                        if ($scope.confirm_del === '确认删除') {
+                            $http.get(httpBaseUrl + "/api/menuserver/removermenuserver?id=" + $scope.shopSonsId).then(function(response) {
+                                if (response.data.code !== 200) {
+                                    alert(response.data.msg);
+                                } else if (response.data.code == 200) {
+                                    alert("恭喜你、删除成功！");
+                                    $("tr#" + $scope.shopSonsId).remove();
+                                    window.location.reload();
+                                }
+                            }, function() {
+                                alert("对不起、请重新删除数据！")
+                            });
+                        } else if ($scope.confirm_del === '') {
+                            alert("请输入左侧框中的文字！");
+                        } else if ($scope.confirm_del !== '确认删除') {
+                            alert("请正确输入左侧框中的文字！");
+                        }
+                    };
+                });
+            }
+        }, function() {
+            alert("对不起、当前网速较慢、请重新获取街道管理员列表！");
+        });
+
+    });
+};
+</script>

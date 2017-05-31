@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>智慧社区菜单管理</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="智慧社区菜单管理">
+    <meta name="keyword" content="智慧社区菜单管理">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="css/glyphicons.css" rel="stylesheet">
+    <link href="css/glyphicons-filetypes.css" rel="stylesheet">
+    <link href="css/glyphicons-social.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/total_zsh.css" rel="stylesheet">
+    <link href="css/total_ymm.css" rel="stylesheet">
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/tether.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/libs/pace.min.js"></script>
+    <script src="js/libs/Chart.min.js"></script>
+    <script src="js/libs/gauge.min.js"></script>
+    <script src="js/libs/moment.min.js"></script>
+    <script src="js/libs/daterangepicker.js"></script>
+    <script src="js/views/shared.js"></script>
+    <script src="js/views/main.js"></script>
+    <script src="js/views/charts.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/views/total_zsh.js"></script>
+    <script src="js/views/total_ymm.js"></script>
+    <script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="./js/views/totalAngular.js"></script>    
+</head>
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" ng-app="project_app" ng-controller="street_user">
+
+    <!-- 引入公共header部分 -->
+    <div ng-include="'header.html'"></div>
+
+    <div class="app-body">
+         <!-- 引入公共sideBar区域开始 -->
+        <div ng-include="'sideBar.html'"></div>
+        <!-- Main content -->
+        <main class="main">
+            <div class="container-fluid self_container_padding">
+                <div class="animated">
+                    <div class="row">
+                        <div class="col-md-12 mb-2">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active topTab" data-toggle="tab" href="#home" role="tab" aria-controls="home" id="0" name="total" ng-click="changeActive($event)">总管理员</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link topTab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" id="1" ng-click="changeActive($event)">街道管理员</a>
+                                </li>
+                                <li class="last-btn">
+                                    <button class="btn btn-primary btn-md pull-right user_add_btn" data-toggle="modal" data-target="#menus_add">
+                                        新增
+                                    </button>
+                                </li>
+                                <div class="modal fade show" id="menus_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog street_edit">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="">新增</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                    ×
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form enctype="multipart/form-data" class="form-horizontal">
+                                                    <div class="form-group row">
+                                                        <label class="col-md-2">类型</label>
+                                                        <select name="" id="" class="col-md-2" ng-model="type_selected" ng-options="x.id as x.name for x  in types">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group row" ng-hide="type_selected=='0'">
+                                                        <label class="col-md-2">父级</label>
+                                                        <select name="" id="" class="col-md-2" ng-model="parent" ng-options="x.id as x.name for x in active_data">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-2">同级内排序</label>
+                                                        <input type="number" min="1" class="form-control col-md-2" ng-model="menuSort">
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-2">菜单名称</label>
+                                                        <input type="text" class="form-control col-md-7" ng-model="menuName">
+                                                    </div>
+                                                    <div class="form-group row" ng-hide="type_selected=='0'">
+                                                        <label class="col-md-2">url</label>
+                                                        <input type="text" class="form-control col-md-7" ng-model="menuPath">
+                                                    </div>
+                                                    <div class="form-group row ">
+                                                        <label class="col-md-2">是否启用</label>
+                                                        <div class="col-md-7">
+                                                            <label class="switch switch-3d switch-primary">
+                                                                <input type="checkbox" class="switch-input" checked ng-init="isEnable='0'" ng-model="isEnable" ng-false-value="0" ng-true-value="1">
+                                                                <span class="switch-label"></span>
+                                                                <span class="switch-handle"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="pull-right">
+                                                    <button type="button" class="btn btn-primary btn-success" ng-click="add_menu();">
+                                                        保存
+                                                    </button>
+                                                    <button type="reset" class="btn btn-default" data-dismiss="modal">关闭
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                </div>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- 总管理员管理 -->
+                                <div class="tab-pane active edit_tab padding-top-none" id="home" role="tabpanel">
+                                    <div class="col-lg-12 edit_col-lg-12">
+                                        <div class="card">
+                                            <div class="card-block padding-top-none">
+                                                <table class="table">
+                                                    <thead class="public_borderBottom">
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>菜单名称</th>
+                                                            <th>父级</th>
+                                                            <th>URL</th>
+                                                            <th>状态</th>
+                                                            <th>操作</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody ng-repeat="total in total_parents" class="public_tbody_border">
+<!-- 一级大类 -->
+<tr>
+    <td class="add_u text-center">
+        <span ng-hide="{{total.isChild}} === false " ng-click="expandable(total.name,$event);" class="expand">+</span>
+    </td>
+    <td>{{total.name}}</td>
+    <td class="hidden-md-down">{{total.parentName}}</td>
+    <td class="hidden-md-down">
+        {{total.path}}
+    </td>
+    <td class="hidden-md-down">
+        {{total.isEnable=='0' ? '禁用' : '启用'}}
+    </td>
+    <td class="hidden-md-down">
+        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#menus_edit" ng-click="editMenuId(total.id)">
+            <i class="fa fa-edit "></i>
+        </button>
+    </td>
+    <div class="modal fade show" id="menus_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog street_edit">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">编辑</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        ×
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-md-2">类型</label>
+                            <select name="" id="" class="col-md-2 selects_input" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                            </select>
+                        </div>
+                        <div class="form-group row tits_input" ng-hide="type_default=='0'">
+                            <label class="col-md-2">父级</label>
+                            <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">同级内排序</label>
+                            <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">菜单名称</label>
+                            <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                        </div>
+                        <div class="form-group row tits_input" ng-hide="type_default=='0'">
+                            <label class="col-md-2">url</label>
+                            <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                        </div>
+                        <div class="form-group row ">
+                            <label class="col-md-2">是否启用</label>
+                            <div class="col-md-7">
+                                <label class="switch switch-3d switch-primary">
+                                    <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                    <span class="switch-label"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="input-group col-md-4 street_form_btn_left">
+                        <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                        <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                            保存
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+</tr>
+<!-- 二级小类 -->
+<tr ng-repeat="street_total_sons in total.child" class="street_sons">
+    <td></td>
+    <td class="street_toal_name">{{street_total_sons.name}}</td>
+    <td class="hidden-md-down street_total_sons_name">{{street_total_sons.parentName}}</td>
+    <td class="hidden-md-down">
+        {{street_total_sons.path}}
+    </td>
+    <td class="hidden-md-down"> {{street_total_sons.isEnable=='0' ? '禁用' : '启用'}}</td>
+    <td class="hidden-md-down">
+        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#menus_sons_edit" ng-click="editMenuId(street_total_sons.id);">
+            <i class="fa fa-edit "></i>
+        </button>
+    </td>
+    <div class="modal fade show" id="menus_sons_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog street_edit">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">编辑</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        ×
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-md-2">类型</label>
+                            <select name="" id="" class="col-md-2 selects_inputs" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                            </select>
+                        </div>
+                        <div class="form-group row tits_inputs" ng-hide="type_default=='0'">
+                            <label class="col-md-2">父级</label>
+                            <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">同级内排序</label>
+                            <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">菜单名称</label>
+                            <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                        </div>
+                        <div class="form-group row tits_inputs" ng-hide="type_default=='0'">
+                            <label class="col-md-2">url</label>
+                            <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                        </div>
+                        <div class="form-group row ">
+                            <label class="col-md-2">是否启用</label>
+                            <div class="col-md-7">
+                                <label class="switch switch-3d switch-primary">
+                                    <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                    <span class="switch-label"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="input-group col-md-4 street_form_btn_left">
+                        <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                        <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                            保存
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+</tr>
+                                                    </tbody>
+                                                </table>
+                                                <section  class="pull-right"> 
+                        <pagination items-per-page="items_per_page" total-items="totalItems" ng-model="currentPage"  ng-change="pageChanged(currentPage)" previous-text="上一页" next-text="下一页"></pagination>
+                    </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 街道管理员管理 -->
+                                <div class="tab-pane edit_tab padding-top-none" id="profile" role="tabpanel">
+                                    <div class="col-lg-12 edit_col-lg-12">
+                                        <div class="card">
+                                            <div class="card-block padding-top-none">
+                                                <table class="table">
+                                                    <thead class="public_borderBottom">
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>菜单名称</th>
+                                                            <th>父级</th>
+                                                            <th>URL</th>
+                                                            <th>状态</th>
+                                                            <th>操作</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody ng-repeat="street in street_parents" class="public_tbody_border">
+<!-- 一级大类 -->
+<tr>
+    <td class="add_u text-center">
+        <span ng-hide="{{street.isChild}}=== false" ng-click="expandable(street.name,$event);" class="expand">+</span>
+    </td>
+    <td>{{street.name}}</td>
+    <td class="hidden-md-down">{{street.parentName}}</td>
+    <td class="hidden-md-down">
+        {{street.path}}
+    </td>
+    <td class="hidden-md-down">
+        {{street.isEnable=='0' ? '禁用' : '启用'}}
+        <td class="hidden-md-down">
+            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#menus_street_edit" ng-click="editMenuId(street.id)">
+                <i class="fa fa-edit "></i>
+            </button>
+        </td>
+        <div class="modal fade show" id="menus_street_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog street_edit">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="">编辑</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            ×
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-md-2">类型</label>
+                                <select name="" id="" class="col-md-2 selec_input" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                                </select>
+                            </div>
+                            <div class="form-group row ti_input" ng-hide="type_default=='0'">
+                                <label class="col-md-2">父级</label>
+                                <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                                </select>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2">同级内排序</label>
+                                <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2">菜单名称</label>
+                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                            </div>
+                            <div class="form-group row ti_input" ng-hide="type_default=='0'">
+                                <label class="col-md-2">url</label>
+                                <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                            </div>
+                            <div class="form-group row ">
+                                <label class="col-md-2">是否启用</label>
+                                <div class="col-md-7">
+                                    <label class="switch switch-3d switch-primary">
+                                        <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="input-group col-md-4 street_form_btn_left">
+                            <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                            <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                                保存
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+</tr>
+<!--  二级小类 -->
+<tr class="street_sons" ng-repeat="street_sons in street.child">
+    <td></td>
+    <td>{{street_sons.name}}</td>
+    <td class="hidden-md-down street_total_sons_name">{{street_sons.parentName}}</td>
+    <td class="hidden-md-down">
+        {{street_sons.path}}
+    </td>
+    <td class="hidden-md-down">{{street_sons.isEnable=='0' ? '禁用' : '启用'}}</td>
+    <td class="hidden-md-down">
+        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#menus_sons_street_edit" ng-click="editMenuId(street_sons.id)">
+            <i class="fa fa-edit "></i>
+        </button>
+    </td>
+    <div class="modal fade show" id="menus_sons_street_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog street_edit">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">编辑</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        ×
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-md-2">类型</label>
+                            <select name="" id="" class="col-md-2 sel_input" ng-model="type_default" ng-options="x.id as x.name for x  in types">
+                            </select>
+                        </div>
+                        <div class="form-group row _input" ng-hide="type_default=='0'">
+                            <label class="col-md-2">父级</label>
+                            <select name="" id="" class="col-md-2" ng-model="par_default" ng-options="x.id as x.name for x in active_data">
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">同级内排序</label>
+                            <input type="number" min="1" class="form-control col-md-2" ng-model="editMenuData.sort">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">菜单名称</label>
+                            <input type="text" class="form-control col-md-7" ng-model="editMenuData.name">
+                        </div>
+                        <div class="form-group row _input" ng-hide="type_default=='0'">
+                            <label class="col-md-2">url</label>
+                            <input type="text" class="form-control col-md-7" ng-model="editMenuData.path">
+                        </div>
+                        <div class="form-group row ">
+                            <label class="col-md-2">是否启用</label>
+                            <div class="col-md-7">
+                                <label class="switch switch-3d switch-primary">
+                                    <input type="checkbox" class="switch-input MenuisEnable{{editMenuData.id}}" checked ng-false-value="0" ng-true-value="1" ng-model="editMenuData.isEnable" ng-change="changeMenuIsenableSwitch()">
+                                    <span class="switch-label"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="input-group col-md-4 street_form_btn_left">
+                        <input type="text" class="form-control" placeholder="输入'确认删除'" style="margin-right:5px;">
+                        <button class="btn btn-danger" type="button" ng-click="delete_menu($event)">删除</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary btn-success" ng-click="editMenuSubmit()">
+                            保存
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+</tr>
+                                                    </tbody>
+                                                </table>
+                                                <section  class="pull-right"> 
+                        <pagination items-per-page="items_per_page" total-items="totalItem" ng-model="currentPage"  ng-change="pageChang(currentPage)" previous-text="上一页" next-text="下一页"></pagination>
+                    </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    var loginKey=JSON.parse(window.sessionStorage.getItem("userData"));
+    var app=angular.module("project_app",['ui.bootstrap']);
+    if(loginKey==null){
+        alert("请先登录！");
+        window.location.href="./index.html";
+    }else{
+        app.controller("street_user", function($scope, $http, $rootScope,$location) {
+    // 取得用户登录的帐号相关信息
+    $scope.userLoginUserData=JSON.parse(window.sessionStorage.getItem("userData"));
+    /*菜单点击展开与收缩*/
+    $scope.expand = 'sheng';
+    $scope.expandable = function(name, $event) {
+        $scope.expand = $scope.expand;
+        var sonsPar = angular.element($event.target).parents("tr").nextAll("tr.street_sons"),
+            sonsParName = angular.element($event.target).parents("tr").next("tr.street_sons").children("td.street_total_sons_name").text();
+        if ($scope.expand === 'sheng') {
+            $scope.expand = 'suo';
+            angular.element($event.target).text("-");
+            if (sonsParName === name) {
+                sonsPar.css("display", "table-row");
+            };
+        } else if ($scope.expand !== 'sheng') {
+            $scope.expand = 'sheng';
+            angular.element($event.target).text("+");
+            if (sonsParName === name) {
+                sonsPar.css("display", "none");
+            };
+        }
+    };
+    /*获取总管理员菜单列表*/
+    $http.get("http://test.jgsoft.org/api/MenuServer/GetTreeList?adminType=total&pos=1&pagesize=10&keyword=").then(function(response) {
+        if(response.data.code !== 200){
+            alert(response.data.msg);
+        }else if(response.data.code == 200){
+            if(response.data.obj==""){
+                alert("当前无菜单、请添加！");
+            }else if(response.data.obj !== ""){
+                $scope.total_parents = response.data.obj;
+                $scope.active_data = response.data.obj;
+                // 设定父级id默认值以及菜单类型
+                $scope.parent = $scope.total_parents['0']['id'];
+                $scope.menuType = "0";
+                $scope.items_per_page=10;                   // 每页显示的条数
+                $scope.maxSize = 10;                        // 限制分页按钮显示的数量大小为10个按钮  
+                $scope.totalItems =response.data.sumcount;  // 总条数
+                $scope.currentPage = 1;                     // 指定当前页码为第一页
+                $scope.pageChanged=function(activePage){
+                    $http.get("http://test.jgsoft.org/api/MenuServer/GetTreeList?adminType=total&pos="+activePage+"&pagesize=10&keyword=").then(function(response){
+                        if(response.data.code !== 200){
+                            alert(response.data.msg);
+                        }else if(response.data.code == 200){
+                             $scope.total_parents = response.data.obj;
+                        }
+                    },function(){
+                        alert("对不起、列表获取失败、请重新获取！");
+                    });
+                };
+            };
+        }
+    }, function() {
+        alert("对不起、当前网速较慢、请重新获取总管理员列表！");
+    });
+    /*获取街道管理员列表*/
+    $http.get("http://test.jgsoft.org/api/MenuServer/GetTreeList?adminType=street&pos=1&pagesize=10&keyword=").then(function(response) {
+        if(response.data.code !== 200){
+            alert(response.data.msg);
+        }else if(response.data.code == 200){
+            $scope.street_parents = response.data.obj;
+            $scope.items_per_page=10;                   // 每页显示的条数
+            $scope.maxSize = 10;                        // 限制分页按钮显示的数量大小为10个按钮  
+            $scope.totalItem =response.data.sumcount;  // 总条数
+            // console.log($scope.totalItems);
+            $scope.currentPage = 1;                     // 指定当前页码为第一页
+            $scope.pageChang=function(activePage){
+                $http.get("http://test.jgsoft.org/api/MenuServer/GetTreeList?adminType=street&pos="+activePage+"&pagesize=10&keyword=").then(function(response){
+                    if(response.data.code !== 200){
+                        alert(response.data.msg);
+                    }else if(response.data.code == 200){
+                         $scope.street_parents = response.data.obj;
+                    }
+                },function(){
+                    alert("对不起、列表获取失败、请重新获取！");
+                });
+            };
+        }
+    }, function() {
+        alert("对不起、当前网速较慢、请重新获取街道管理员列表！");
+    });
+    /*选择类型自定义数组*/
+    $scope.types = [{
+        "id": "0",
+        "name": "标题"
+    }, {
+        "id": "1",
+        "name": "功能"
+    }];
+    // 设定新增typeid的默认值
+    $scope.type_selected = $scope.types['0']['id'];
+    /*监听当前页面为总管理还是街道管理*/
+    /*给当前页面一个默认值*/
+    $scope.changeActive = function($event) {
+        var aLink = angular.element($event.target).text();
+        if (aLink == '总管理员') {
+            $scope.active_data = $scope.total_parents;
+            // 设定父级id默认值
+            $scope.parent = $scope.total_parents['0']['id'];
+            $scope.menuType = "0";
+        } else if (aLink == '街道管理员') {
+            $scope.active_data = $scope.street_parents;
+            // 设定父级id默认值
+            if($scope.active_data==""){
+               $scope.parent = 0;
+            }else if($scope.active_data !== ""){
+               $scope.parent = $scope.street_parents['0']['id'];
+            };
+            $scope.menuType = "1";
+        };
+    };
+    /*新增管理员菜单*/
+    $scope.add_menu = function() {
+        var addMeunData = {
+            "id": "0",
+            "parentId": $scope.type_selected == '0' ? $scope.parent = "0" : $scope.parent,
+            "name": $scope.menuName,
+            "sort": $scope.menuSort,
+            "type": $scope.type_selected,
+            "path": $scope.type_selected == '0' ? $scope.menuPath = "" : $scope.menuPath,
+            "isEnable": $scope.isEnable,
+            "menuType": $scope.menuType
+        };
+        if ($scope.menuSort == undefined) {
+            alert("请手动排序！");
+        } else if ($scope.menuName == undefined) {
+            alert("请输入菜单名称！");
+        } else if ($scope.menuPath == undefined) {
+            alert("请输入url地址！");
+        } else {
+            $http.post("http://test.jgsoft.org/api/menuserver/SubmitMenuServer", addMeunData).then(function(response) {
+                if(response.data.code !== 200){
+                    alert(response.data.msg);
+                }else if(response.data.code == 200){
+                    alert("恭喜你、成功添加菜单！");
+                    window.location.reload();
+                }   
+            }, function() {
+                alert("对不起，请重新添加菜单！");
+            });
+        };
+    };
+    /*动态编辑*/
+    $scope.editMenuId = function(editID) {
+        /*根据id查询单条编辑的详细信息*/
+        $http.get("http://test.jgsoft.org/api/MenuServer/getsingle?id=" + editID).then(function(response) {
+            $scope.editMenuData = response.data.obj;
+            $scope.type_default = JSON.stringify(response.data.obj.type);
+            $scope.par_default = response.data.obj.parentId;
+            // 根据查询的isEnable的值呈现不同的页面开关样式
+            $scope.changeMenuIsenableSwitch = function() {
+                var _this = $("input.MenuisEnable" + editID);
+                if ($scope.editMenuData.isEnable == '1') {
+                    _this.prop('checked', true);
+                } else if ($scope.editMenuData.isEnable == '0') {
+                    _this.prop('checked', false);
+                };
+            };
+            // 提交编辑的菜单信息   
+            $scope.editMenuSubmit = function() {
+                var editMeunData = {
+                    "id": $scope.editMenuData.id,
+                    "parentId": $scope.type_default == '0' ? "0" : $scope.par_default,
+                    "name": $scope.editMenuData.name,
+                    "sort": $scope.editMenuData.sort,
+                    "type": $scope.type_default,
+                    "path": $scope.type_default == '0' ? "" : $scope.editMenuData.path,
+                    "isEnable": $scope.editMenuData.isEnable,
+                    "menuType": $scope.editMenuData.menuType
+                };
+                if ($scope.type_default == '0') {
+                    if ($scope.editMenuData.name == "") {
+                        alert("请填写菜单名称！");
+                    }else if($scope.editMenuData.sort==undefined){
+                        alert("请手动排序！");
+                    }else {
+                        $http.post("http://test.jgsoft.org/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                            if(response.data.code !== 200){
+                                alert(response.data.msg);
+                            }else if(response.data.code == 200){
+                                alert("恭喜你、成功编辑菜单！");
+                                window.location.reload();
+                            }
+                        }, function() {
+                            alert("对不起，请重新编辑菜单！");
+                        });
+                    };
+                } else if ($scope.type_default == '1') {
+                    if ($scope.par_default == '0') {
+                        alert("请选择父级！");
+                    } else if($scope.editMenuData.sort==undefined){
+                        alert("请手动排序！");
+                    } else if ($scope.editMenuData.name == "") {
+                        alert("请填写菜单名称！");
+                    } else if ($scope.editMenuData.path == "") {
+                        alert("请填写url地址!");
+                    } else {
+                        $http.post("http://test.jgsoft.org/api/menuserver/SubmitMenuServer", editMeunData).then(function(response) {
+                            if(response.data.code !== 200){
+                                alert(response.data.msg);
+                            }else if(response.data.code == 200){
+                                alert("恭喜你、成功编辑菜单！");
+                                window.location.reload();
+                                // console.log(editMeunData);
+                            }
+                        }, function() {
+                            alert("对不起，请重新编辑菜单！");
+                        });
+                    };
+                };
+            };
+            /*删除管理员*/
+            $scope.delete_menu = function($event) {
+                $scope.confirm_del = angular.element($event.target).prev('input').val();
+                if ($scope.confirm_del === '确认删除') {
+                    $http.get("http://test.jgsoft.org/api/menuserver/removermenuserver?id=" + editID).then(function(response) {
+                        if(response.data.code !== 200){
+                            alert(response.data.msg);
+                        }else if(response.data.code == 200){
+                            alert("恭喜你、删除成功！");
+                            $("tr.del" + editID).remove();
+                            window.location.reload();
+                        }  
+                    }, function() {
+                        alert("对不起、请重新删除数据！")
+                    });
+                } else if ($scope.confirm_del === '') {
+                    alert("请输入左侧框中的文字！");
+                } else if ($scope.confirm_del !== '确认删除') {
+                    alert("请正确输入左侧框中的文字！");
+                }
+            };
+        }, function() {
+            alert("对不起、当前网速较慢、请耐心等待当前街道的详细信息！");
+        });
+    };
+    });
+    }; 
+</script>
